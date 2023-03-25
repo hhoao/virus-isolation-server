@@ -1,4 +1,4 @@
-package org.hhoa.vi.admin.dao;
+package org.hhoa.vi.mgb.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.hhoa.vi.mgb.model.generator.UmsAccountAuth;

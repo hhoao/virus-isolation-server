@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hhoa.vi.mgb.model.UmsAccount;
-import org.hhoa.vi.mgb.model.UmsRole;
+import org.hhoa.vi.mgb.model.generator.OmsOrganization;
+import org.hhoa.vi.mgb.model.generator.UmsAccount;
+import org.hhoa.vi.mgb.model.generator.UmsRole;
 
 /**
  * The type Ums account wrapper.
@@ -18,5 +19,5 @@ import org.hhoa.vi.mgb.model.UmsRole;
 @Setter
 @Getter
 public class UmsAccountWrapper extends UmsAccount {
-    private UmsRole role;
+    private OmsOrganization organization;
 }

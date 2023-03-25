@@ -1,7 +1,7 @@
 package org.hhoa.vi.portal.service;
 
 
-import org.hhoa.vi.mgb.model.AmsArticle;
+import org.hhoa.vi.mgb.model.generator.AmsArticle;
 
 import java.util.List;
 

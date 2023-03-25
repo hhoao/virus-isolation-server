@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package toolchain;
+package org.hhoa.vi.build.toolchain;
 
 import org.gradle.api.Project;
 import org.gradle.api.provider.ListProperty;

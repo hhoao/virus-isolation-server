@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hhoa.vi.mgb.model.UmsAccount;
-import org.hhoa.vi.mgb.model.UmsResource;
+import org.hhoa.vi.mgb.model.OrganizationPosition;
+import org.hhoa.vi.mgb.model.generator.UmsAccount;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
+import org.hhoa.vi.security.component.ComplexGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
@@ -26,32 +27,33 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UmsAccountDetails implements UserDetails, Serializable {
-    private UmsAccount account;
-
-    private List<UmsResource> resources;
-
     @Serial
     private static final long serialVersionUID = 1L;
+    private UmsAccount account;
+    private List<OrganizationPosition> organizationPositions;
 
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //最终roleId:roleName即为访问资源所需要的权限, factoryId:jobId为访问公司所需要的权限
-        return new ArrayList<>(resources.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getId() + ":" + role.getName()))
-                .toList());
+        List<GrantedAuthority> list = new ArrayList<>();
+        organizationPositions.forEach(
+                organizationPosition -> list.add(
+                        new ComplexGrantedAuthority(
+                                organizationPosition.getOrganizationId()+":" + organizationPosition.getPositionId(), "position")));
+        return list;
     }
 
     @Override
     @JsonIgnore
     public String getPassword() {
-        return account.getPassword();
+        return "";
     }
 
     @Override
     @JsonIgnore
     public String getUsername() {
-        return account.getUsername();
+        return "";
     }
 
     @Override

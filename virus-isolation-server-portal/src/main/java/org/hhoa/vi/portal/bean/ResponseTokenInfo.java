@@ -2,6 +2,7 @@ package org.hhoa.vi.portal.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 响应的Token信息.
@@ -12,6 +13,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ResponseTokenInfo {
     private String token;
     private String tokenHead;

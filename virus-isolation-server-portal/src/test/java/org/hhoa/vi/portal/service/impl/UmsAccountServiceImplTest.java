@@ -1,9 +1,9 @@
-package org.hhoa.vi.portal.impl;
+package org.hhoa.vi.portal.service.impl;
 
 import org.hhoa.vi.common.exception.ApiException;
 import org.hhoa.vi.mgb.model.generator.UmsAccount;
 import org.hhoa.vi.mgb.model.generator.UmsResource;
-import org.hhoa.vi.portal.TransactionTest;
+import org.hhoa.vi.portal.utils.TransactionTest;
 import org.hhoa.vi.portal.bean.PageInfo;
 import org.hhoa.vi.portal.bean.UmsAccountDetails;
 import org.hhoa.vi.portal.bean.UmsLoginParam;
@@ -29,7 +29,7 @@ class UmsAccountServiceImplTest extends TransactionTest {
     @Autowired
     JwtTokenService jwtTokenService;
     String testPassword = "123456";
-    String testAccountName = "test";
+    String testAccountName = "test1";
     String testErrorIdentifier = "error";
 
     @Test
@@ -52,7 +52,7 @@ class UmsAccountServiceImplTest extends TransactionTest {
     public String getAuthorization() {
         UmsLoginParam umsLoginParam = new UmsLoginParam();
         umsLoginParam.setPassword("123456");
-        umsLoginParam.setUsername("test");
+        umsLoginParam.setUsername("test1");
         String token = accountService.login(umsLoginParam);
         return jwtTokenService.getTokenHead() + token;
     }
@@ -73,13 +73,7 @@ class UmsAccountServiceImplTest extends TransactionTest {
 
     @Test
     void getAccountByName() {
-        UmsAccount accountByName = accountService.getAccountByAccountName(testAccountName);
-        Assertions.assertEquals(accountByName.getId(), 1L);
-    }
-
-    @Test
-    void getAccountResources() {
-        List<UmsResource> accountResources = accountService.getAccountResources(1L);
-        Assertions.assertTrue(accountResources.size() > 0);
+        UmsAccount accountByName = accountService.getAccountByAccountNameUseAccountDetailsCache(testAccountName);
+        Assertions.assertEquals(accountByName.getId(), 3L);
     }
 }

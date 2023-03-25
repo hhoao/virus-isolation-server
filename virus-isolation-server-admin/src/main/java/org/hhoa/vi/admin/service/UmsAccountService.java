@@ -1,11 +1,12 @@
-package com.hhoa.vblog.admin.service;
+package org.hhoa.vi.admin.service;
 
 
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.bean.UmsAccountWrapper;
-import com.hhoa.vblog.admin.bean.UmsLoginParam;
-import com.hhoa.vblog.mgb.model.UmsAccount;
-import com.hhoa.vblog.mgb.model.UmsResource;
+import org.hhoa.vi.admin.bean.AccountAuthWrapper;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.admin.bean.UmsAccountWrapper;
+import org.hhoa.vi.admin.bean.UmsLoginParam;
+import org.hhoa.vi.mgb.model.generator.UmsAccount;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,15 +66,15 @@ public interface UmsAccountService {
      * @param accountName the accountName
      * @return the account by accountName
      */
-    UmsAccount getAccountByAccountName(String accountName);
+    UmsAccount getAccountByAccountNameUseAccountDetailsCache(String accountName);
 
     /**
      * 更新用户.
      *
-     * @param account 用户参数
+     * @param accountAuthWrapper 用户参数
      */
     @Transactional
-    void updateAccount(UmsAccount account);
+    void updateAccount(AccountAuthWrapper accountAuthWrapper);
 
     /**
      * Gets account.
@@ -89,7 +90,7 @@ public interface UmsAccountService {
      * @param account the account
      * @return the account
      */
-    List<UmsAccount> getAccounts(UmsAccount account);
+    List<UmsAccount> getAccount(UmsAccount account);
 
     /**
      * Delete account by account id.
@@ -126,7 +127,7 @@ public interface UmsAccountService {
     /**
      * Add account.
      *
-     * @param account the account
+     * @param accountAuthWrapper
      */
-    void addAccount(UmsAccount account);
+    void addAccount(AccountAuthWrapper accountAuthWrapper);
 }

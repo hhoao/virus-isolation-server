@@ -1,0 +1,18 @@
+plugins {
+    id 'org.hhoa.vi.java-conventions'
+    id 'org.hhoa.vi.springboot-dev-conventions'
+}
+
+dependencies {
+    implementation project(':virus-isolation-server-security')
+    implementation project(':virus-isolation-server-mgb')
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation libs.mybatis.spring.boot.starter
+    implementation libs.mysql.connector.java
+    implementation libs.mybatis.plus.boot.starter
+}
+tasks.named("bootBuildImage") {
+    publish = false
+}

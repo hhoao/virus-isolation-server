@@ -1,8 +1,9 @@
-package org.hhoa.vi.admin.service;
+package org.hhoa.vi.portal.service;
 
 
-import org.hhoa.vi.admin.bean.UmsAccountAuthParam;
 import org.hhoa.vi.mgb.model.generator.UmsAccountAuth;
+import org.hhoa.vi.mgb.model.IdentifyType;
+import org.hhoa.vi.portal.bean.UmsAccountAuthParam;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public interface UmsAccountAuthService {
      * @param identifyType the identify type
      * @return the user auth
      */
-    UmsAccountAuth getAccountAuth(Long userId, String identifyType);
+    UmsAccountAuth getAccountAuth(Long userId, IdentifyType identifyType);
 
     /**
      * Gets user auth with identify type.
@@ -39,7 +40,7 @@ public interface UmsAccountAuthService {
      * @param identifier   the identifier
      * @return the user auth with identify type
      */
-    UmsAccountAuth getAccountAuth(String identifyType, String identifier);
+    UmsAccountAuth getAccountAuth(IdentifyType identifyType, String identifier);
 
 
     /**
@@ -49,7 +50,7 @@ public interface UmsAccountAuthService {
      * @param identifier   the identifier
      * @return the boolean
      */
-    boolean exists(String identifyType, String identifier);
+    boolean exists(IdentifyType identifyType, String identifier);
 
     /**
      * 绑定默认使用其他认证密码，如果没有其他认证，将生成一个未知密码.
@@ -60,7 +61,7 @@ public interface UmsAccountAuthService {
      * @param identifyType the identifyType
      */
     @Transactional
-    void bind(Long accountId, String identifier, String identifyType);
+    void bind(Long accountId, String identifier, IdentifyType identifyType);
 
     /**
      * Update credential.
@@ -86,7 +87,7 @@ public interface UmsAccountAuthService {
      * @param identifyType  the identify type
      * @param userAuthParam the user auth param
      */
-    void updateAccountAuth(Long userId, String identifyType, UmsAccountAuthParam userAuthParam);
+    void updateAccountAuth(Long userId, IdentifyType identifyType, UmsAccountAuthParam userAuthParam);
 
 
     /**
@@ -103,7 +104,7 @@ public interface UmsAccountAuthService {
      * @param userId   the user id
      * @param authType the auth type
      */
-    void deleteAccountAuth(Long userId, String authType);
+    void deleteAccountAuth(Long userId, IdentifyType authType);
 
     /**
      * Gets user auth.
@@ -117,8 +118,8 @@ public interface UmsAccountAuthService {
      * Exists boolean.
      *
      * @param userId the user id
-     * @param email  the email
+     * @param identifyType  the identifyType
      * @return the boolean
      */
-    boolean exists(Long userId, String email);
+    boolean exists(Long userId, IdentifyType identifyType);
 }

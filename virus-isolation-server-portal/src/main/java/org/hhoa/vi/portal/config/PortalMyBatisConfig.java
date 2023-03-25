@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Configuration;
  * @since 2022/5/5
  **/
 @Configuration
-@MapperScan(basePackages = {"org.hhoa.vi.portal.dao", "org.hhoa.vi.mgb.mapper"})
+@MapperScan(basePackages = {"org.hhoa.vi.portal.dao", "org.hhoa.vi.mgb.dao"})
 public class PortalMyBatisConfig {
 }

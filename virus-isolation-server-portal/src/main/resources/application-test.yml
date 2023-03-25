@@ -17,9 +17,22 @@ spring:
   cache:
     redis:
       time-to-live: 1d
-rest-template:
-  root:
-    uri: http://127.0.0.1:8889
+  # 配置邮箱
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: haunghao@foxmail.com
+    # 授权码
+    password: ENC=(ps6g7c9mJXVEUlzg1OPgiQ7veHDothDpTmy4Z28CbTE=)
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class=javax:
+              net:
+                ssl:
+                  SSLSocketFactory:
+
 
 file:
   upload:

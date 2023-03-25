@@ -1,7 +1,7 @@
-package com.hhoa.vblog.admin.config;
+package org.hhoa.vi.admin.config;
 
-import com.hhoa.vblog.common.service.RedisService;
-import com.hhoa.vblog.common.service.impl.RedisServiceImpl;
+import org.hhoa.vi.common.service.RedisService;
+import org.hhoa.vi.common.service.impl.RedisServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;

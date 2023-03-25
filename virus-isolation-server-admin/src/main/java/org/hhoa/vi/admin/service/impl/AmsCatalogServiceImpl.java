@@ -1,14 +1,14 @@
-package com.hhoa.vblog.admin.service.impl;
+package org.hhoa.vi.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.dao.AmsCatalogDao;
-import com.hhoa.vblog.admin.service.AmsArticleCatalogRelationService;
-import com.hhoa.vblog.admin.service.AmsCatalogService;
-import com.hhoa.vblog.mgb.model.AmsArticle;
-import com.hhoa.vblog.mgb.model.AmsCatalog;
 import lombok.AllArgsConstructor;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.mgb.dao.AmsCatalogDao;
+import org.hhoa.vi.admin.service.AmsArticleCatalogRelationService;
+import org.hhoa.vi.admin.service.AmsCatalogService;
+import org.hhoa.vi.mgb.model.generator.AmsArticle;
+import org.hhoa.vi.mgb.model.generator.AmsCatalog;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

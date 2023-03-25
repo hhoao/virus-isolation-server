@@ -1,7 +1,7 @@
-package com.hhoa.vblog.admin.config;
+package org.hhoa.vi.admin.config;
 
-import com.hhoa.vblog.common.config.BaseSwaggerConfig;
-import com.hhoa.vblog.common.domain.SwaggerProperties;
+import org.hhoa.vi.common.config.BaseSwaggerConfig;
+import org.hhoa.vi.common.domain.SwaggerProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -15,7 +15,7 @@ public class AdminSwaggerConfig extends BaseSwaggerConfig {
     @Override
     public SwaggerProperties swaggerProperties() {
         return SwaggerProperties.builder()
-                .apiBasePackage("com.hhoa.vblog.admin")
+                .apiBasePackage("org.hhoa.vi.admin")
                 .title("vblog后台服务")
                 .description("任何值得到达的地方，都没有捷径!")
                 .contactName("hhoao")

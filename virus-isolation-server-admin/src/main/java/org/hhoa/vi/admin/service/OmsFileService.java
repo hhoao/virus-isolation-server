@@ -1,8 +1,9 @@
-package com.hhoa.vblog.admin.service;
+package org.hhoa.vi.admin.service;
 
 
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.mgb.model.OmsFile;
+;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.mgb.model.generator.OmsFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;

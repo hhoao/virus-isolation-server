@@ -1,9 +1,9 @@
-package com.hhoa.vblog.admin.service;
+package org.hhoa.vi.admin.service;
 
 
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.bean.UmsResourceParam;
-import com.hhoa.vblog.mgb.model.UmsResource;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.admin.bean.UmsResourceParam;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

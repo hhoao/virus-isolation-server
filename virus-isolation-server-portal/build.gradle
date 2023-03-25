@@ -1,0 +1,18 @@
+plugins {
+    id 'org.hhoa.vi.java-conventions'
+    id 'org.hhoa.vi.springboot-dev-conventions'
+}
+
+dependencies {
+    implementation project(':virus-isolation-server-mgb')
+    implementation project(':virus-isolation-server-security')
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation libs.javax.mail.mail
+    implementation libs.mybatis.spring.boot.starter
+    implementation libs.mysql.connector.java
+    implementation libs.mybatis.plus.boot.starter
+}
+
+

@@ -1,4 +1,4 @@
-package org.hhoa.vi.portal.bean;
+package org.hhoa.vi.mgb.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +36,7 @@ public enum IdentifyType {
             map.put(identifyType.value, identifyType);
         }
     }
-    public static IdentifyType find(String value){
+    public static IdentifyType get(String value){
         return map.get(value);
     }
 }

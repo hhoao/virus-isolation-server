@@ -12,12 +12,18 @@ import java.util.List;
  * @since 2023/3/21
  **/
 
-public class UmsAccountDetails {
+public class UserDetailsData extends UmsAccount{
     private UmsAccount account;
     private List<UmsResource> resources;
     private List<OrganizationPosition> organizationPositions;
 
-    public UmsAccountDetails() {
+    public UserDetailsData(UmsAccount account, List<UmsResource> resources, List<OrganizationPosition> organizationPositions) {
+        this.account = account;
+        this.resources = resources;
+        this.organizationPositions = organizationPositions;
+    }
+
+    public UserDetailsData() {
     }
 
     public UmsAccount getAccount() {

@@ -1,19 +1,15 @@
 package org.hhoa.vi.admin.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.hhoa.vi.admin.VIAdminApplication;
+import org.hhoa.vi.admin.bean.ResponseTokenInfo;
 import org.hhoa.vi.admin.bean.UmsLoginParam;
 import org.hhoa.vi.common.api.CommonResult;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-
-import java.util.Map;
 
 /**
  * BasicTest
@@ -51,15 +47,16 @@ public class BasicTest {
     }
 
     public TestRestTemplate getLoginTemplate(UmsLoginParam umsLoginParam) {
-        CommonResult<Map<String, String>> commonResult =
-                (CommonResult<Map<String, String>>) notVerifiedTemplate.postForObject(
-                        "/accounts/auth/token", umsLoginParam, CommonResult.class);
+        String tokenJson = notVerifiedTemplate.postForObject(
+                "/accounts/auth/token", umsLoginParam, String.class);
+        CommonResult<ResponseTokenInfo> commonResult = TestUtils.jsonStringToObject(tokenJson, new TypeReference<CommonResult<ResponseTokenInfo>>() {
+        });
         return new TestRestTemplate(
                 new RestTemplateBuilder().
                         rootUri(rootUri).
                         defaultHeader("Authorization",
-                                commonResult.getResult().get("tokenHead") +
-                                        commonResult.getResult().get("token"))
+                                commonResult.getResult().getTokenHead()+
+                                        commonResult.getResult().getToken())
         );
     }
 
@@ -72,7 +69,6 @@ public class BasicTest {
         if (adminVerifiedTemplate == null) {
             UmsLoginParam umsLoginParam = new UmsLoginParam("hhoa", "123456");
             adminVerifiedTemplate = getLoginTemplate(umsLoginParam);
-
         }
 
         return adminVerifiedTemplate;

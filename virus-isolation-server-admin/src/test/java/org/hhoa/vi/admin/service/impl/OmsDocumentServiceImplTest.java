@@ -16,7 +16,7 @@ import java.util.List;
  * @since 2023/3/20
  **/
 
-class OmsDocumentServiceImplTestService extends ServiceTransactionTest {
+class OmsDocumentServiceImplTest extends ServiceTransactionTest {
     @Autowired
     OmsDocumentService documentService;
 

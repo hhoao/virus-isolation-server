@@ -17,12 +17,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AbstractAccessDecisionManager;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -40,7 +43,7 @@ import java.util.List;
 @EnableWebSecurity
 @Configuration
 @EnableConfigurationProperties(JwtSecurityProperties.class)
-public class JwtSecurityAutoConfiguration {
+public class JwtSecurityConfiguration {
     private final JwtSecurityProperties jwtSecurityProperties;
     private final JwtTokenService jwtTokenService;
     private UserDetailsService userDetailsService;
@@ -48,7 +51,7 @@ public class JwtSecurityAutoConfiguration {
     private AuthenticationTokenFilter authenticationTokenFilter;
     private List<AccessDecisionVoter<?>> voters;
 
-    public JwtSecurityAutoConfiguration(
+    public JwtSecurityConfiguration(
             JwtSecurityProperties jwtSecurityProperties,
             @Autowired(required = false)
             JwtTokenService jwtTokenService) {
@@ -143,6 +146,12 @@ public class JwtSecurityAutoConfiguration {
     @Autowired(required = false)
     public void userDetailsService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(PasswordEncoder.class)
+    public static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     protected UserDetailsService userDetailsService() {

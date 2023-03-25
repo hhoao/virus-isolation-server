@@ -1,7 +1,7 @@
 package org.hhoa.vi.portal.service;
 
 
-import org.hhoa.vi.mgb.model.AmsTag;
+import org.hhoa.vi.mgb.model.generator.AmsTag;
 import org.hhoa.vi.portal.bean.PageInfo;
 
 import java.util.List;

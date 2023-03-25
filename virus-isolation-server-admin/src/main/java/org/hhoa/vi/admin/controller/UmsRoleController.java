@@ -1,17 +1,18 @@
-package com.hhoa.vblog.admin.controller;
+package org.hhoa.vi.admin.controller;
 
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.bean.UmsRoleParam;
-import com.hhoa.vblog.admin.service.UmsRoleResourceRelationService;
-import com.hhoa.vblog.admin.service.UmsRoleService;
-import com.hhoa.vblog.common.api.CommonPage;
-import com.hhoa.vblog.common.api.CommonResult;
-import com.hhoa.vblog.mgb.model.UmsResource;
-import com.hhoa.vblog.mgb.model.UmsRole;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.admin.bean.UmsRoleParam;
+import org.hhoa.vi.admin.service.UmsRoleResourceRelationService;
+import org.hhoa.vi.admin.service.UmsRoleService;
+import org.hhoa.vi.common.api.CommonPage;
+import org.hhoa.vi.common.api.CommonResult;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
+import org.hhoa.vi.mgb.model.generator.UmsRole;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;

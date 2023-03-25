@@ -1,4 +1,4 @@
-package com.hhoa.vblog.search.config;
+package org.hhoa.vi.search.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

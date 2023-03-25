@@ -22,7 +22,7 @@ import java.util.List;
 
 
 @SpringBootTest
-class AmsArticleServiceImplTestService extends ServiceTransactionTest {
+class AmsArticleServiceImplTest extends ServiceTransactionTest {
     @Autowired
     private AmsArticleService articleService;
 

@@ -1,4 +1,4 @@
-package com.hhoa.vblog.mgb;
+package org.hhoa.vi.mgb;
 
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
@@ -18,7 +18,7 @@ public class Generator {
         //MBG 执行过程中的警告信息
         List<String> warnings = new ArrayList<String>();
         //当生成的代码重复时，不覆盖原代码
-        boolean overwrite = false;
+        boolean overwrite = true;
         //读取我们的 MBG 配置文件
         InputStream is = Generator.class.getResourceAsStream("/generatorConfig.xml");
         ConfigurationParser cp = new ConfigurationParser(warnings);

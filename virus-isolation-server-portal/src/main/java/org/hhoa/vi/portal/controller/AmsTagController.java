@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.hhoa.vi.common.api.CommonPage;
 import org.hhoa.vi.common.api.CommonResult;
-import org.hhoa.vi.mgb.model.AmsTag;
+import org.hhoa.vi.mgb.model.generator.AmsTag;
 import org.hhoa.vi.portal.bean.PageInfo;
 import org.hhoa.vi.portal.service.AmsTagService;
 import org.springframework.web.bind.annotation.GetMapping;

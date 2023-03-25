@@ -1,10 +1,10 @@
-package com.rare_earth_track.portal.service;
+package org.hhoa.vi.portal.service;
 
 /**
  * @author hhoa
  * @date 2022/5/15
  **/
-public interface RetMailCacheService {
+public interface OmsMailCacheService {
     /**
      * 设置mail验证码
      * @param to 接收方

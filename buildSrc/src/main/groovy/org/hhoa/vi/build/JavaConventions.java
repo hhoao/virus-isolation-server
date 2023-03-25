@@ -1,3 +1,5 @@
+package org.hhoa.vi.build;
+
 import com.github.spotbugs.snom.SpotBugsExtension;
 import com.github.spotbugs.snom.SpotBugsPlugin;
 import com.github.spotbugs.snom.SpotBugsTask;
@@ -15,8 +17,8 @@ import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.api.tasks.javadoc.Javadoc;
 import org.gradle.api.tasks.testing.Test;
 import org.gradle.external.javadoc.CoreJavadocOptions;
-import toolchain.ToolchainPlugin;
-import testing.TestFailuresPlugin;
+import org.hhoa.vi.build.toolchain.ToolchainPlugin;
+import org.hhoa.vi.build.testing.TestFailuresPlugin;
 
 import java.util.Arrays;
 import java.util.List;

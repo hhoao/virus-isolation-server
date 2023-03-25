@@ -1,7 +1,7 @@
-package com.hhoa.vblog.admin.service;
+package org.hhoa.vi.admin.service;
 
 
-import com.hhoa.vblog.mgb.model.UmsRole;
+import org.hhoa.vi.mgb.model.generator.UmsRole;
 
 /**
  * 角色缓存服务.

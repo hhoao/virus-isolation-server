@@ -25,7 +25,7 @@ import java.util.List;
  * @since 2022/5/31
  **/
 
-class UmsAccountServiceImplTestService extends ServiceTransactionTest {
+class UmsAccountServiceImplTest extends ServiceTransactionTest {
     @Autowired
     UmsAccountService accountService;
     @Autowired
@@ -74,7 +74,7 @@ class UmsAccountServiceImplTestService extends ServiceTransactionTest {
         account.setNickname("updateNickName");
         accountAuthWrapper.setAccountInfo(account);
         accountService.updateAccount(accountAuthWrapper);
-        Assertions.assertTrue(accountService.getAccounts(account).size() >0);
+        Assertions.assertTrue(accountService.getAccount(account).size() >0);
     }
 
     @Test
@@ -89,7 +89,7 @@ class UmsAccountServiceImplTestService extends ServiceTransactionTest {
         accountService.getAccounts(1L);
         UmsAccount account = new UmsAccount();
         account.setIntroduce("Hello");
-        List<UmsAccount> account1 = accountService.getAccounts(account);
+        List<UmsAccount> account1 = accountService.getAccount(account);
         for (UmsAccount account2 : account1) {
             Assertions.assertEquals(account2.getIntroduce(), "HelloWorld");
         }
@@ -120,7 +120,7 @@ class UmsAccountServiceImplTestService extends ServiceTransactionTest {
         UmsAccount account = new UmsAccount();
         account.setRoleId(3L);
         accountService.deleteAccounts(account);
-        List<UmsAccount> account1 = accountService.getAccounts(account);
+        List<UmsAccount> account1 = accountService.getAccount(account);
         Assertions.assertEquals(account1.size(), 0);
     }
 }

@@ -1,11 +1,10 @@
 package org.hhoa.vi.portal.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.github.pagehelper.PageHelper;
 import lombok.AllArgsConstructor;
-import org.hhoa.vi.mgb.model.AmsComment;
+import org.hhoa.vi.mgb.dao.AmsCommentDao;
+import org.hhoa.vi.mgb.model.generator.AmsComment;
 import org.hhoa.vi.portal.bean.PageInfo;
-import org.hhoa.vi.portal.dao.AmsCommentDao;
 import org.hhoa.vi.portal.service.AmsCommentService;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,9 @@ public class AmsCommentServiceImpl implements AmsCommentService {
     private AmsCommentDao commentDao;
 
     @Override
-    public List<AmsComment> list(AmsComment commentParams, PageInfo pageInfo) {
-        PageHelper.startPage(pageInfo);
-        return commentDao.selectList(new QueryWrapper<>(commentParams));
+    public List<AmsComment> getArticleComments(Long articleId, PageInfo pageInfo) {
+        AmsComment comment = new AmsComment();
+        comment.setArticleId(articleId);
+        return commentDao.selectList(new QueryWrapper<>(comment));
     }
 }

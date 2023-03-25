@@ -1,18 +1,20 @@
-package com.hhoa.vblog.admin.controller;
+package org.hhoa.vi.admin.controller;
 
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.bean.ResponseTokenInfo;
-import com.hhoa.vblog.admin.bean.UmsAccountWrapper;
-import com.hhoa.vblog.admin.bean.UmsLoginParam;
-import com.hhoa.vblog.admin.service.UmsAccountService;
-import com.hhoa.vblog.common.api.CommonPage;
-import com.hhoa.vblog.common.api.CommonResult;
-import com.hhoa.vblog.mgb.model.UmsAccount;
-import com.hhoa.vblog.security.config.JwtSecurityProperties;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.AllArgsConstructor;
+import org.hhoa.vi.admin.bean.AccountAuthWrapper;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.admin.bean.ResponseTokenInfo;
+import org.hhoa.vi.admin.bean.UmsAccountWrapper;
+import org.hhoa.vi.admin.bean.UmsLoginParam;
+import org.hhoa.vi.admin.service.UmsAccountService;
+import org.hhoa.vi.common.api.CommonPage;
+import org.hhoa.vi.common.api.CommonResult;
+import org.hhoa.vi.mgb.model.generator.UmsAccount;
+import org.hhoa.vi.security.config.JwtSecurityProperties;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -51,8 +53,8 @@ public class UmsAccountController {
 
     @Operation(summary = "添加账户")
     @PostMapping("/accounts")
-    public CommonResult<String> addAccount(@RequestBody UmsAccount account) {
-        accountService.addAccount(account);
+    public CommonResult<String> addAccount(@RequestBody AccountAuthWrapper accountAuthWrapper) {
+        accountService.addAccount(accountAuthWrapper);
         return CommonResult.success(null);
     }
 
@@ -89,16 +91,13 @@ public class UmsAccountController {
     public CommonResult<CommonPage<UmsAccount>> getAccountByAccountParam(UmsAccount account,
                                                                          PageInfo pageInfo) {
         List<UmsAccount> accounts = accountService.list(pageInfo, account);
-        for (UmsAccount subAccount : accounts) {
-            subAccount.setPassword(null);
-        }
         return CommonResult.success(CommonPage.restPage(accounts));
     }
 
     @Operation(summary = "更新账户资料")
     @PatchMapping("/accounts")
-    public CommonResult<String> updateAccount(@RequestBody UmsAccount newAccount) {
-        accountService.updateAccount(newAccount);
+    public CommonResult<String> updateAccount(@RequestBody AccountAuthWrapper accountAuthWrapper) {
+        accountService.updateAccount(accountAuthWrapper);
         return CommonResult.success(null);
     }
 

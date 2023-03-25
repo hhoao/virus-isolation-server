@@ -1,8 +1,9 @@
-package org.hhoa.vi.admin.bean;
+package org.hhoa.vi.mgb.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hhoa.vi.mgb.model.generator.UmsAccount;
+
+import java.util.Date;
 
 /**
  * OrganizationAccount
@@ -11,8 +12,22 @@ import org.hhoa.vi.mgb.model.generator.UmsAccount;
  * @since 2023/3/19
  **/
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class OrganizationAccount extends UmsAccount {
+
+public class OrganizationAccount extends UmsAccount{
     private Long positionId;
+
+    public OrganizationAccount() {
+    }
+
+    public Long getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(Long positionId) {
+        this.positionId = positionId;
+    }
+
+    public OrganizationAccount(Long positionId) {
+        this.positionId = positionId;
+    }
 }

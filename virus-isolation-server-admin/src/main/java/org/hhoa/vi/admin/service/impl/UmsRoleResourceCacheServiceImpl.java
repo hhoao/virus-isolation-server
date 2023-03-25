@@ -1,13 +1,14 @@
-package com.hhoa.vblog.admin.service.impl;
+package org.hhoa.vi.admin.service.impl;
 
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hhoa.vblog.admin.service.UmsRoleResourceCacheService;
-import com.hhoa.vblog.common.service.RedisService;
-import com.hhoa.vblog.mgb.model.UmsResource;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.hhoa.vi.admin.service.UmsRoleResourceCacheService;
+import org.hhoa.vi.common.service.RedisService;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -26,9 +27,9 @@ import java.util.List;
 public class UmsRoleResourceCacheServiceImpl implements UmsRoleResourceCacheService {
     private final RedisService redisService;
 
-    @Value("${ret.redis.database}")
+    @Value("${project.redis.database}")
     private String redisDatabase;
-    @Value("${ret.redis.key.resource-role}")
+    @Value("${project.redis.key.resource-role}")
     private String redisKeyResourceRole;
 
     private ObjectMapper objectMapper;

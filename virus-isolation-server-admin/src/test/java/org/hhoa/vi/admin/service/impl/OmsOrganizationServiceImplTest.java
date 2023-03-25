@@ -1,10 +1,12 @@
 package org.hhoa.vi.admin.service.impl;
 
 import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.admin.bean.UmsAccountAuthParam;
 import org.hhoa.vi.admin.service.OmsOrganizationService;
 import org.hhoa.vi.admin.utils.ServiceTransactionTest;
 import org.hhoa.vi.mgb.model.OrganizationAccount;
 import org.hhoa.vi.mgb.model.generator.OmsOrganization;
+import org.hhoa.vi.mgb.model.generator.UmsAccount;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ import java.util.stream.Stream;
  * @since 2023/3/19
  **/
 
-class OmsOrganizationServiceImplTestService extends ServiceTransactionTest {
+class OmsOrganizationServiceImplTest extends ServiceTransactionTest {
     @Autowired
     private OmsOrganizationService organizationService;
 
@@ -28,7 +30,8 @@ class OmsOrganizationServiceImplTestService extends ServiceTransactionTest {
     void list() {
         OmsOrganization amsOrganization = new OmsOrganization();
         amsOrganization.setName("test_organization");
-        List<OmsOrganization> list = organizationService.list(amsOrganization, new PageInfo(1, 0));
+        List<OmsOrganization> list = organizationService.list(
+                amsOrganization, new PageInfo(1, 0));
         Assertions.assertTrue(list.size() > 0);
         list.forEach(omsOrganization -> {
             Assertions.assertEquals(omsOrganization.getName(), "test_organization");
@@ -72,33 +75,53 @@ class OmsOrganizationServiceImplTestService extends ServiceTransactionTest {
 
     @Test
     void listOrganizationAccounts() {
-        List<OrganizationAccount> umsAccounts = organizationService.listOrganizationAccounts(new PageInfo(1, 5), 1L);
+        UmsAccount account=  new UmsAccount();
+        account.setId(1L);
+        List<OrganizationAccount> umsAccounts =
+                organizationService.listOrganizationAccounts(
+                        new PageInfo(1, 5), 1L, account);
         Assertions.assertTrue(umsAccounts.size() > 0);
-        Assertions.assertFalse(organizationService.listOrganizationAccounts(new PageInfo(1, 0), 0L).size() > 0);
+        umsAccounts.forEach(organizationAccount -> {
+            Assertions.assertSame(organizationAccount.getId(), account.getId());
+        });
+        Assertions.assertFalse(
+                organizationService.listOrganizationAccounts(
+                        new PageInfo(
+                                1, 0), 0L, null).size() > 0);
     }
 
     @Test
     void deleteOrganizationAccountByUserId() {
         organizationService.deleteOrganizationAccountByUserId(1L, 1L);
-        Assertions.assertEquals(0, organizationService.listOrganizationAccounts(new PageInfo(1, 5), 1L).size());
+        Assertions.assertEquals(
+                0, organizationService.listOrganizationAccounts(
+                        new PageInfo(1, 5), 1L, null).size());
     }
 
     @Test
     void updateOrganizationAccountPosition() {
         organizationService.updateOrganizationAccountPosition(1L, 1L, 2L);
-        List<OrganizationAccount> organizationAccounts = organizationService.listOrganizationAccounts(new PageInfo(1, 5), 1L);
-        Stream<OrganizationAccount> organizationAccountStream = organizationAccounts.stream().filter((account) -> account.getPositionId() == 2);
-        Assertions.assertTrue(organizationAccountStream.count() > 0);
+        List<OrganizationAccount> organizationAccounts =
+                organizationService.listOrganizationAccounts(
+                        new PageInfo(1, 5), 1L, null);
+        Stream<OrganizationAccount> organizationAccountStream =
+                organizationAccounts.stream().filter(
+                        (account) -> account.getPositionId() == 2);
+        Assertions.assertTrue(organizationAccountStream.findAny().isPresent());
     }
 
     @Test
     void deleteByAccountIdAndOrganizationId() {
-        List<OrganizationAccount> organizationAccounts = organizationService.listOrganizationAccounts(new PageInfo(1, 5), 1L);
+        List<OrganizationAccount> organizationAccounts =
+                organizationService.listOrganizationAccounts(
+                        new PageInfo(1, 5), 1L, null);
         organizationService.deleteByAccountIdAndOrganizationId(
                 organizationAccounts.get(0).getId(), 1L);
         OmsOrganization omsOrganization = new OmsOrganization();
         omsOrganization.setId(1L);
-        List<OmsOrganization> list = organizationService.list(omsOrganization, new PageInfo(1, 0));
+        List<OmsOrganization> list =
+                organizationService.list(
+                        omsOrganization, new PageInfo(1, 0));
         Assertions.assertEquals(0, list.size());
     }
 }

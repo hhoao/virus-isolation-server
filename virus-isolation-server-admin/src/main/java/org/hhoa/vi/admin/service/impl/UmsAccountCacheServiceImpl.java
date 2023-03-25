@@ -1,12 +1,13 @@
-package com.hhoa.vblog.admin.service.impl;
+package org.hhoa.vi.admin.service.impl;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hhoa.vblog.admin.bean.UmsAccountDetails;
-import com.hhoa.vblog.admin.service.UmsAccountCacheService;
-import com.hhoa.vblog.common.service.RedisService;
+;
 import lombok.SneakyThrows;
+import org.hhoa.vi.admin.bean.UmsAccountDetails;
+import org.hhoa.vi.admin.service.UmsAccountCacheService;
+import org.hhoa.vi.common.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -21,11 +22,11 @@ import org.springframework.stereotype.Service;
 @Service
 //@RequiredArgsConstructor
 public class UmsAccountCacheServiceImpl implements UmsAccountCacheService {
-    @Value("${ret.redis.database}")
+    @Value("${project.redis.database}")
     private String redisDatabase;
-    @Value("${ret.redis.expire.token}")
+    @Value("${project.redis.expire.token}")
     private Long redisExpire;
-    @Value("${ret.redis.key.administrator}")
+    @Value("${project.redis.key.administrator}")
     private String redisKey;
     private RedisService redisService;
 

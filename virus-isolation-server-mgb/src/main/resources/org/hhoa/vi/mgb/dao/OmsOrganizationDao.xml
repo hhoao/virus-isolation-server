@@ -16,24 +16,33 @@
     </delete>
 
     <select id="listOrganizationAccounts" resultMap="organizationAccount">
-        SELECT id, username, avatar, title, introduce, country, address, phone, email, signature, oaor.pi position_id
+        SELECT id,
+               nickname,
+               avatar,
+               title,
+               introduce,
+               country,
+               address,
+               phone,
+               email,
+               signature,
+               oaor.pi position_id
         FROM ums_account ua,
              (SELECT account_id ai, position_id pi
               FROM oms_account_organization_relation
-              WHERE organization_id = #{organizationId}
-              ) oaor
+              WHERE organization_id = #{organizationId}) oaor
         WHERE oaor.ai = ua.id
     </select>
-    <select id="deleteByAccountNameAndOrganizationId">
+    <select id="deleteByAccountIdAndOrganizationId">
         DELETE
         FROM oms_organization
         WHERE id =
               (SELECT organization_id
-               FROM oms_account_organization_relation acor,
-                    (SELECT id aid FROM ums_account WHERE username = #{accountName}) ac
-               WHERE acor.account_id = ac.aid
-                 AND acor.organization_id = #{orgainzationId})
+               FROM oms_account_organization_relation acor
+                        JOIN (SELECT id aid
+                              FROM ums_account ua
+                              WHERE ua.id = #{accountId}) ac
+                             ON acor.account_id = ac.aid
+                                 AND acor.organization_id = #{organizationId})
     </select>
-    <insert id="insertByAccountNameAndOrganization">
-    </insert>
 </mapper>

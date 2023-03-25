@@ -1,22 +1,22 @@
-package com.hhoa.vblog.admin.config;
+package org.hhoa.vi.admin.config;
 
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.jwt.JWT;
-import com.hhoa.vblog.admin.service.UmsAccountCacheService;
-import com.hhoa.vblog.admin.service.UmsAccountService;
-import com.hhoa.vblog.admin.service.UmsResourceService;
-import com.hhoa.vblog.mgb.model.UmsResource;
-import com.hhoa.vblog.security.component.DynamicSecurityService;
-import com.hhoa.vblog.security.config.JwtSecurityProperties;
-import com.hhoa.vblog.security.util.DefaultJwtTokenServiceImpl;
-import com.hhoa.vblog.security.util.JwtTokenService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.hhoa.vi.admin.service.UmsAccountCacheService;
+import org.hhoa.vi.admin.service.UmsAccountService;
+import org.hhoa.vi.admin.service.UmsResourceService;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
+import org.hhoa.vi.security.component.DynamicSecurityService;
+import org.hhoa.vi.security.config.JwtSecurityProperties;
+import org.hhoa.vi.security.util.DefaultJwtTokenServiceImpl;
+import org.hhoa.vi.security.util.JwtTokenService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +29,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.Collection;
 import java.util.Date;
@@ -63,35 +64,39 @@ public class AdminJwtSecurityConfig {
      * @return 选举者 access decision voter
      */
     @Bean
-    @SuppressWarnings("all")
-    public AccessDecisionVoter resourceAccessDecisionVoter() {
-        return new AccessDecisionVoter() {
+    public AccessDecisionVoter<Object> resourceAccessDecisionVoter() {
+        return new AccessDecisionVoter<>() {
             @Override
             public boolean supports(ConfigAttribute attribute) {
                 return true;
             }
 
             @Override
-            public boolean supports(Class clazz) {
+            public boolean supports(Class<?> clazz) {
                 return true;
             }
 
             @Override
-            @SuppressWarnings("unchecked")
-            public int vote(Authentication authentication, Object object, Collection collection) {
+            public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> collection) {
                 // 当接口未被配置资源时直接放行
                 if (CollUtil.isEmpty(collection)) {
                     return AccessDecisionVoter.ACCESS_ABSTAIN;
                 }
-                for (ConfigAttribute configAttribute : (Collection<ConfigAttribute>) collection) {
-                    //将访问所需资源或用户拥有资源进行比对
-                    String needAuthority = configAttribute.getAttribute();
-                    for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {
-                        if (needAuthority.trim().equals(grantedAuthority.getAuthority())) {
-                            return AccessDecisionVoter.ACCESS_GRANTED;
+
+                    for (ConfigAttribute configAttribute : collection) {
+                        if (!configAttribute.getAttribute().startsWith("role")) {
+                            continue;
+                        }
+                        //将访问所需资源或用户拥有资源进行比对
+                        String needAuthority =
+                                configAttribute.getAttribute().
+                                        substring("role:".length());
+                        for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {
+                            if (needAuthority.trim().equals(grantedAuthority.getAuthority())) {
+                                return AccessDecisionVoter.ACCESS_GRANTED;
+                            }
                         }
                     }
-                }
                 return AccessDecisionVoter.ACCESS_DENIED;
             }
         };
@@ -105,14 +110,14 @@ public class AdminJwtSecurityConfig {
     @RequiredArgsConstructor
     public static class AdminDynamicSecurityServiceConfig {
         private final UmsResourceService resourceService;
-        private Map<AntPathRequestMatcher, ConfigAttribute> dataSource;
+        private Map<RequestMatcher, ConfigAttribute> dataSource;
 
         /**
          * Gets data source.
          *
          * @return the data source
          */
-        public Map<AntPathRequestMatcher, ConfigAttribute> getDataSource() {
+        public Map<RequestMatcher, ConfigAttribute> getDataSource() {
             refreshDataSource();
             return dataSource;
         }
@@ -120,11 +125,11 @@ public class AdminJwtSecurityConfig {
         /**
          * 资源权限变动动态刷新DataSource.
          */
-        @Pointcut("execution(* com.hhoa.vblog.admin.service.impl."
+        @Pointcut("execution(* *.hhoa.*.admin.service.impl."
                 + "UmsResourceServiceImpl.delete*(..))"
-                + "|| execution(* com.hhoa.vblog.admin.service.impl."
+                + "|| execution(* *.hhoa.*.admin.service.impl."
                 + "UmsResourceServiceImpl.update*(..))"
-                + "|| execution(* com.hhoa.vblog.admin.service.impl."
+                + "|| execution(* *.hhoa.*.admin.service.impl."
                 + "UmsResourceServiceImpl.add*(..))")
         public void alterDataSource() {
         }
@@ -147,11 +152,11 @@ public class AdminJwtSecurityConfig {
         private void refreshResourcesDataSource() {
             List<UmsResource> allResources = resourceService.getAllResources();
 
-            for (UmsResource retResource : allResources) {
+            for (UmsResource resource : allResources) {
                 //url:method 需要resourceId:resourceName 权限
                 this.dataSource.put(
-                        new AntPathRequestMatcher(retResource.getUrl(), retResource.getMethod()),
-                        new SecurityConfig(retResource.getId() + ":" + retResource.getName()));
+                        new AntPathRequestMatcher(resource.getUrl(), resource.getMethod()),
+                        new SecurityConfig(resource.getType() + ":" +  resource.getId() + ":" + resource.getName()));
             }
         }
 

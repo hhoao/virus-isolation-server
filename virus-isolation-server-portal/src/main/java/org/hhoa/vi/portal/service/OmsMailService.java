@@ -2,7 +2,7 @@ package org.hhoa.vi.portal.service;
 
 
 import org.hhoa.vi.mgb.model.generator.OmsOrganization;
-import org.hhoa.vi.portal.bean.MailType;
+import org.hhoa.vi.mgb.model.MailType;
 
 /**
  * The interface Ums mail service.
@@ -10,7 +10,7 @@ import org.hhoa.vi.portal.bean.MailType;
  * @author hhoa
  * @date 2022 /5/15
  */
-public interface UmsMailService {
+public interface OmsMailService {
     /**
      * 获取消息
      *

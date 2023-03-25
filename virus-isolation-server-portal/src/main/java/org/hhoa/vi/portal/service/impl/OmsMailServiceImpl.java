@@ -4,8 +4,10 @@ package org.hhoa.vi.portal.service.impl;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.hhoa.vi.common.exception.Asserts;
-import org.hhoa.vi.portal.bean.MailType;
-import org.hhoa.vi.portal.service.UmsMailService;
+import org.hhoa.vi.mgb.model.generator.OmsOrganization;
+import org.hhoa.vi.mgb.model.MailType;
+import org.hhoa.vi.portal.service.OmsMailCacheService;
+import org.hhoa.vi.portal.service.OmsMailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,16 +22,16 @@ import java.util.Random;
 @Service
 @Data
 @RequiredArgsConstructor
-public class UmsMailServiceImpl implements UmsMailService {
+public class OmsMailServiceImpl implements OmsMailService {
     /**
      * 邮件类型
      */
     private final MailSender mailSender;
-    private final UmsMailCacheService mailCacheService;
+    private final OmsMailCacheService mailCacheService;
     /**
      * 发送方邮箱
      */
-    @Value("${ret.mail.from}")
+    @Value("${project.mail.from}")
     private String from;
 
     /**
@@ -83,7 +85,7 @@ public class UmsMailServiceImpl implements UmsMailService {
     }
 
     @Override
-    public void sendFactoryInvitation(String to, UmsFactory factory){
+    public void sendOrganizationInvitation(String to, OmsOrganization factory){
         if (existMessage(to, MailType.FACTORY_INVITATION)){
             Asserts.fail("短时间内不能再验证码");
         }

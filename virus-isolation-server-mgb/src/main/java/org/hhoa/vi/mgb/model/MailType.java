@@ -1,4 +1,7 @@
-package org.hhoa.vi.portal.bean;
+package org.hhoa.vi.mgb.model;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 邮件类型
@@ -34,5 +37,19 @@ public enum MailType {
     }
     public String toString() {
         return id.toString();
+    }
+    public Integer value() {
+        return this.id;
+    }
+
+    private final static Map<Integer, MailType> map;
+    static {
+        map = new HashMap<>();
+        for (MailType mailType : MailType.values()) {
+            map.put(mailType.value(), mailType);
+        }
+    }
+    public static MailType find(Integer value){
+        return map.get(value);
     }
 }

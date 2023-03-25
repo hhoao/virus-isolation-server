@@ -1,7 +1,7 @@
 package org.hhoa.vi.portal.service;
 
 
-import org.hhoa.vi.mgb.model.AmsComment;
+import org.hhoa.vi.mgb.model.generator.AmsComment;
 import org.hhoa.vi.portal.bean.PageInfo;
 
 import java.util.List;
@@ -14,11 +14,11 @@ import java.util.List;
  */
 public interface AmsCommentService {
     /**
-     * List list.
+     * Gets article comments.
      *
-     * @param commentParams the comment params
-     * @param pageInfo      the page info
-     * @return the list
+     * @param articleId the article id
+     * @param pageInfo  the page info
+     * @return article comments
      */
-    List<AmsComment> list(AmsComment commentParams, PageInfo pageInfo);
+    List<AmsComment> getArticleComments(Long articleId, PageInfo pageInfo);
 }

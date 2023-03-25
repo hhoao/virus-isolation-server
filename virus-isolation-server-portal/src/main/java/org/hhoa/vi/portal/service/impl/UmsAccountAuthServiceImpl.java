@@ -1,11 +1,15 @@
-package org.hhoa.vi.admin.service.impl;
+package org.hhoa.vi.portal.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 
 import org.hhoa.vi.common.exception.Asserts;
+import org.hhoa.vi.mgb.dao.UmsAccountAuthDao;
 import org.hhoa.vi.mgb.model.generator.UmsAccountAuth;
+import org.hhoa.vi.mgb.model.IdentifyType;
+import org.hhoa.vi.portal.bean.UmsAccountAuthParam;
+import org.hhoa.vi.portal.service.UmsAccountAuthService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,10 +35,10 @@ public class UmsAccountAuthServiceImpl implements UmsAccountAuthService {
     }
 
     @Override
-    public UmsAccountAuth getAccountAuth(Long accountId, String identifyType) {
+    public UmsAccountAuth getAccountAuth(Long accountId, IdentifyType identifyType) {
         UmsAccountAuth accountAuth = new UmsAccountAuth();
         accountAuth.setAccountId(accountId);
-        accountAuth.setIdentityType(identifyType);
+        accountAuth.setIdentityType(identifyType.value());
         List<UmsAccountAuth> retAccountAuths = accountAuthMapper.selectList(new QueryWrapper<>(accountAuth));
         if (retAccountAuths == null || retAccountAuths.size() == 0) {
             Asserts.fail("没有该验证方式");
@@ -43,10 +47,10 @@ public class UmsAccountAuthServiceImpl implements UmsAccountAuthService {
     }
 
     @Override
-    public UmsAccountAuth getAccountAuth(String identifyType, String identifier) {
+    public UmsAccountAuth getAccountAuth(IdentifyType identifyType, String identifier) {
         UmsAccountAuth accountAuth = new UmsAccountAuth();
         accountAuth.setIdentifier(identifier);
-        accountAuth.setIdentityType(identifyType);
+        accountAuth.setIdentityType(identifyType.value());
         List<UmsAccountAuth> retAccountAuths = accountAuthMapper.selectList(new QueryWrapper<>(accountAuth));
         if (retAccountAuths == null || retAccountAuths.size() == 0) {
             Asserts.fail("没有该用户");
@@ -55,16 +59,16 @@ public class UmsAccountAuthServiceImpl implements UmsAccountAuthService {
     }
 
     @Override
-    public boolean exists(String identifyType, String identifier) {
+    public boolean exists(IdentifyType identifyType, String identifier) {
         UmsAccountAuth accountAuth = new UmsAccountAuth();
         accountAuth.setIdentifier(identifier);
-        accountAuth.setIdentityType(identifyType);
+        accountAuth.setIdentityType(identifyType.value());
         List<UmsAccountAuth> retAccountAuths = accountAuthMapper.selectList(new QueryWrapper<>(accountAuth));
         return retAccountAuths != null && retAccountAuths.size() != 0;
     }
 
     @Override
-    public void bind(Long accountId, String identifier, String identifyType) {
+    public void bind(Long accountId, String identifier, IdentifyType identifyType) {
         List<UmsAccountAuth> accountAuth1 = getAccountAuth(accountId);
         String credential = UUID.randomUUID().toString();
         if (accountAuth1.size() > 0) {
@@ -73,7 +77,7 @@ public class UmsAccountAuthServiceImpl implements UmsAccountAuthService {
         UmsAccountAuth accountAuth = new UmsAccountAuth();
         accountAuth.setAccountId(accountId);
         accountAuth.setIdentifier(identifier);
-        accountAuth.setIdentityType(identifyType);
+        accountAuth.setIdentityType(identifyType.value());
         accountAuth.setCredential(credential);
         accountAuthMapper.insert(accountAuth);
     }
@@ -103,7 +107,7 @@ public class UmsAccountAuthServiceImpl implements UmsAccountAuthService {
     }
 
     @Override
-    public void updateAccountAuth(Long accountId, String identifyType, UmsAccountAuthParam accountAuthParam) {
+    public void updateAccountAuth(Long accountId, IdentifyType identifyType, UmsAccountAuthParam accountAuthParam) {
         UmsAccountAuth oldAccountAuth = getAccountAuth(accountId, identifyType);
         UmsAccountAuth accountAuth = new UmsAccountAuth();
         BeanUtils.copyProperties(accountAuthParam, accountAuth);
@@ -117,15 +121,15 @@ public class UmsAccountAuthServiceImpl implements UmsAccountAuthService {
 
     @Override
     public Long getAccountIdByAccountName(String accountname) {
-        UmsAccountAuth usernameAuth = getAccountAuth(IdentifyType.USERNAME, accountname);
+        UmsAccountAuth usernameAuth = getAccountAuth(IdentifyType.username, accountname);
         return usernameAuth.getAccountId();
     }
 
     @Override
-    public void deleteAccountAuth(Long accountId, String authType) {
+    public void deleteAccountAuth(Long accountId, IdentifyType authType) {
         UmsAccountAuth accountAuth = new UmsAccountAuth();
         accountAuth.setAccountId(accountId);
-        accountAuth.setIdentityType(authType);
+        accountAuth.setIdentityType(authType.value());
         accountAuthMapper.delete(new QueryWrapper<>(accountAuth));
     }
 
@@ -145,10 +149,10 @@ public class UmsAccountAuthServiceImpl implements UmsAccountAuthService {
     }
 
     @Override
-    public boolean exists(Long accountId, String identifyType) {
+    public boolean exists(Long accountId, IdentifyType identifyType) {
         UmsAccountAuth accountAuth = new UmsAccountAuth();
         accountAuth.setAccountId(accountId);
-        accountAuth.setIdentityType(identifyType);
+        accountAuth.setIdentityType(identifyType.value());
         return accountAuthMapper.exists(new QueryWrapper<>(accountAuth));
     }
 }

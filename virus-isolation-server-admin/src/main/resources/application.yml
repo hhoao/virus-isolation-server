@@ -26,12 +26,16 @@ management:
 # 配置mybatis
 mybatis:
   mapper-locations:
-    - classpath:com/hhoa/vblog/mgb/mapper/*.xml
+    - classpath:org/hhoa/vi/admin/dao/*.xml
+    - classpath:org/hhoa/vi/mgb/dao/*.xml
+
+rest-template:
+  root-uri: http://127.0.0.1:8888/
 
 # 项目配置
-ret:
+project:
   redis:
-    database: ret
+    database: vi
     key:
       administrator: administrator
       role: role

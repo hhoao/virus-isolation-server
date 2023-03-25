@@ -1,6 +1,8 @@
-package com.hhoa.vblog.admin.service;
+package org.hhoa.vi.admin.service;
 
-import com.hhoa.vblog.mgb.model.AmsArticle;
+
+
+import org.hhoa.vi.mgb.model.generator.AmsArticle;
 
 import java.util.List;
 

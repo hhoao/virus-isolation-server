@@ -1,8 +1,8 @@
-package org.hhoa.vi.portal.impl;
+package org.hhoa.vi.portal.service.impl;
 
 
 import org.hhoa.vi.mgb.model.generator.AmsArticle;
-import org.hhoa.vi.portal.TransactionTest;
+import org.hhoa.vi.portal.utils.TransactionTest;
 import org.hhoa.vi.portal.bean.PageInfo;
 import org.hhoa.vi.portal.service.AmsArticleService;
 import org.junit.jupiter.api.Assertions;

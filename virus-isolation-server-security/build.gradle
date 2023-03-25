@@ -1,0 +1,20 @@
+plugins {
+    id 'org.hhoa.vi.java-conventions'
+    id 'org.hhoa.vi.springboot-dev-conventions'
+}
+
+dependencies {
+    api project(':virus-isolation-server-common')
+    api 'org.springframework.boot:spring-boot-starter-security'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    api libs.jackson.datatype.jsr310
+    api libs.jjwt
+}
+
+tasks.named("bootJar") {
+    enabled false
+}
+
+tasks.named('compileJava') {
+    inputs.files(tasks.named('processResources'))
+}

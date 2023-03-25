@@ -1,6 +1,6 @@
 package org.hhoa.vi.security.component;
 
-import org.hhoa.vi.security.config.DynamicSecurityFilterProperties;
+import org.hhoa.vi.security.config.JwtSecurityProperties;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.SecurityMetadataSource;
@@ -25,7 +25,7 @@ import java.io.IOException;
 public class JwtDynamicSecurityFilter extends AbstractSecurityInterceptor implements Filter {
     private final DynamicSecurityMetadataSource dynamicSecurityMetadataSource;
     //    private final List<String> ignoredUrls;
-    private final DynamicSecurityFilterProperties filterProperties;
+    private final JwtSecurityProperties.DynamicSecurityFilterProperties filterProperties;
 
     /**
      * 设置jwt过滤器constructor.
@@ -35,17 +35,13 @@ public class JwtDynamicSecurityFilter extends AbstractSecurityInterceptor implem
      */
     public JwtDynamicSecurityFilter(AccessDecisionManager dynamicAcc,
                                     DynamicSecurityMetadataSource dynamicSecurityMetadataSource,
-                                    DynamicSecurityFilterProperties filterProperties
+                                    JwtSecurityProperties.DynamicSecurityFilterProperties filterProperties
     ) {
         setAccessDecisionManager(dynamicAcc);
         this.dynamicSecurityMetadataSource = dynamicSecurityMetadataSource;
         this.filterProperties = filterProperties;
     }
 
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
 
     @Override
     public void doFilter(ServletRequest servletRequest,
@@ -69,11 +65,11 @@ public class JwtDynamicSecurityFilter extends AbstractSecurityInterceptor implem
             }
         }
 
-        // 默认需要验证
+        // 若默认需要验证
         if (filterProperties.getAuthenticated()) {
             //此处会调用AccessDecisionManager中的decide方法进行鉴权操作
             token = super.beforeInvocation(fi);
-        // 默认不需要验证，验证需要验证的请求
+        // 若默认不需要验证，验证需要验证的请求
         } else {
             for (String path : filterProperties.getInclude()) {
                 if (pathMatcher.match(path, request.getRequestURI())) {

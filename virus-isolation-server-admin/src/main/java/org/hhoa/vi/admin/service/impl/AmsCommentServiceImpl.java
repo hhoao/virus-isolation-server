@@ -1,12 +1,13 @@
-package com.hhoa.vblog.admin.service.impl;
+package org.hhoa.vi.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.dao.AmsCommentDao;
-import com.hhoa.vblog.admin.service.AmsCommentService;
-import com.hhoa.vblog.mgb.model.AmsComment;
+;
 import lombok.AllArgsConstructor;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.mgb.dao.AmsCommentDao;
+import org.hhoa.vi.admin.service.AmsCommentService;
+import org.hhoa.vi.mgb.model.generator.AmsComment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

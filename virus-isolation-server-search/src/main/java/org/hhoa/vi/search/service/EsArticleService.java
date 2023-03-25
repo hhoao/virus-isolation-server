@@ -1,6 +1,6 @@
-package com.hhoa.vblog.search.service;
+package org.hhoa.vi.search.service;
 
-import com.hhoa.vblog.search.bean.EsArticle;
+import org.hhoa.vi.search.bean.EsArticle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

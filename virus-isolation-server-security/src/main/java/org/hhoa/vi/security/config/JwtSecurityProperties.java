@@ -3,6 +3,9 @@ package org.hhoa.vi.security.config;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Jwt配置属性.
  *
@@ -38,6 +41,23 @@ public class JwtSecurityProperties {
      */
     private Integer refreshTime = 30;
 
-    private DynamicSecurityFilterProperties filter;
+    @Data
+    public static class DynamicSecurityFilterProperties {
+        /**
+         * 不需要验证的请求.
+         */
+        private List<String> ignored = new ArrayList<>();
 
+        /**
+         * 需要验证的请求.
+         */
+        private  List<String> include = new ArrayList<>();
+
+        /**
+         * 默认是否需要验证.
+         */
+        private Boolean authenticated = true;
+    }
+
+    private DynamicSecurityFilterProperties filter;
 }

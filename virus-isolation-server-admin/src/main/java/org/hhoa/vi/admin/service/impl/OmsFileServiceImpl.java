@@ -1,14 +1,15 @@
-package com.hhoa.vblog.admin.service.impl;
+package org.hhoa.vi.admin.service.impl;
 
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.dao.OmsFileDao;
-import com.hhoa.vblog.admin.service.OmsFileService;
-import com.hhoa.vblog.mgb.model.OmsFile;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.mgb.dao.OmsFileDao;
+import org.hhoa.vi.admin.service.OmsFileService;
+import org.hhoa.vi.mgb.model.generator.OmsFile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

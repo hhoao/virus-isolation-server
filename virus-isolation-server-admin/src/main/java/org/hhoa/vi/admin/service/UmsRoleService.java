@@ -1,10 +1,10 @@
-package com.hhoa.vblog.admin.service;
+package org.hhoa.vi.admin.service;
 
 
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.bean.UmsRoleParam;
-import com.hhoa.vblog.mgb.model.UmsResource;
-import com.hhoa.vblog.mgb.model.UmsRole;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.admin.bean.UmsRoleParam;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
+import org.hhoa.vi.mgb.model.generator.UmsRole;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public interface UmsRoleService {
      * @param roleId the role id
      * @return the role resources
      */
-    List<UmsResource> getRoleResources(Long roleId);
+    List<UmsResource> getRoleResourcesUseRoleCache(Long roleId);
 
     /**
      * Gets role resources.

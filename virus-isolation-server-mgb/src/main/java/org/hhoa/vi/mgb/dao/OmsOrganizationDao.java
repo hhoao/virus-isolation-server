@@ -1,10 +1,11 @@
-package org.hhoa.vi.admin.dao;
+package org.hhoa.vi.mgb.dao;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.hhoa.vi.mgb.model.OrganizationAccount;
 import org.hhoa.vi.mgb.model.generator.OmsOrganization;
+import org.hhoa.vi.mgb.model.generator.UmsAccount;
 
 import java.util.List;
 
@@ -22,7 +23,10 @@ public interface OmsOrganizationDao extends BaseMapper<OmsOrganization> {
      * @param accountId      the account id
      * @param positionId     the position id
      */
-    void updateOrganizationAccountPosition(@Param("organizationId") Long organizationId, @Param("accountId") Long accountId, @Param("positionId") Long positionId);
+    void updateOrganizationAccountPosition(
+            @Param("organizationId") Long organizationId,
+            @Param("accountId") Long accountId,
+            @Param("positionId") Long positionId);
 
     /**
      * Delete organization account by account id.
@@ -36,7 +40,19 @@ public interface OmsOrganizationDao extends BaseMapper<OmsOrganization> {
      * List organization accounts list.
      *
      * @param organizationId the organization id
+     * @param accountParam
      * @return the list
      */
-    List<OrganizationAccount> listOrganizationAccounts(@Param("organizationId") Long organizationId);
+    List<OrganizationAccount> listOrganizationAccounts(
+            @Param("organizationId") Long organizationId,
+            @Param("accountParam") UmsAccount accountParam);
+
+
+    /**
+     * Delete by account name and organization id.
+     *
+     * @param accountId      the account name
+     * @param organizationId the organization id
+     */
+    void deleteByAccountIdAndOrganizationId(@Param("accountId") Long accountId, @Param("organizationId") Long organizationId);
 }

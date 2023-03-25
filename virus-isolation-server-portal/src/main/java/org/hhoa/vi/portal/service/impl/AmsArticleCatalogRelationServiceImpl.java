@@ -2,9 +2,9 @@ package org.hhoa.vi.portal.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AllArgsConstructor;
-import org.hhoa.vi.mgb.model.AmsArticle;
-import org.hhoa.vi.mgb.model.AmsArticleCatalogRelation;
-import org.hhoa.vi.portal.dao.AmsArticleCatalogRelationDao;
+import org.hhoa.vi.mgb.dao.AmsArticleCatalogRelationDao;
+import org.hhoa.vi.mgb.model.generator.AmsArticle;
+import org.hhoa.vi.mgb.model.generator.AmsArticleCatalogRelation;
 import org.hhoa.vi.portal.service.AmsArticleCatalogRelationService;
 import org.hhoa.vi.portal.service.AmsArticleService;
 import org.springframework.stereotype.Service;

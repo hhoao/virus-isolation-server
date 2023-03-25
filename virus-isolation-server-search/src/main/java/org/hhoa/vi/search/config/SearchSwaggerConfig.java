@@ -1,7 +1,7 @@
-package com.hhoa.vblog.search.config;
+package org.hhoa.vi.search.config;
 
-import com.hhoa.vblog.common.config.BaseSwaggerConfig;
-import com.hhoa.vblog.common.domain.SwaggerProperties;
+import org.hhoa.vi.common.config.BaseSwaggerConfig;
+import org.hhoa.vi.common.domain.SwaggerProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -15,8 +15,8 @@ public class SearchSwaggerConfig extends BaseSwaggerConfig {
     @Override
     public SwaggerProperties swaggerProperties() {
         return SwaggerProperties.builder()
-                .apiBasePackage("com.hhoa.vblog.search")
-                .title("vblog search module")
+                .apiBasePackage("com.hhoa.vi.search")
+                .title("vi search module")
                 .description("任何值得到达的地方，都没有捷径!")
                 .contactName("hhoao")
                 .contactUrl("")

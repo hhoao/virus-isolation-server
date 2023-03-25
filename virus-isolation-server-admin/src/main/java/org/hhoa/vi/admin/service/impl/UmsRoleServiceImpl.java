@@ -1,20 +1,21 @@
-package com.hhoa.vblog.admin.service.impl;
+package org.hhoa.vi.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.bean.UmsRoleParam;
-import com.hhoa.vblog.admin.dao.UmsRoleDao;
-import com.hhoa.vblog.admin.service.UmsAccountService;
-import com.hhoa.vblog.admin.service.UmsRoleResourceCacheService;
-import com.hhoa.vblog.admin.service.UmsRoleResourceRelationService;
-import com.hhoa.vblog.admin.service.UmsRoleService;
-import com.hhoa.vblog.common.exception.Asserts;
-import com.hhoa.vblog.mgb.model.UmsAccount;
-import com.hhoa.vblog.mgb.model.UmsResource;
-import com.hhoa.vblog.mgb.model.UmsRole;
+
 import lombok.RequiredArgsConstructor;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.admin.bean.UmsRoleParam;
+import org.hhoa.vi.mgb.dao.UmsRoleDao;
+import org.hhoa.vi.admin.service.UmsAccountService;
+import org.hhoa.vi.admin.service.UmsRoleResourceCacheService;
+import org.hhoa.vi.admin.service.UmsRoleResourceRelationService;
+import org.hhoa.vi.admin.service.UmsRoleService;
+import org.hhoa.vi.common.exception.Asserts;
+import org.hhoa.vi.mgb.model.generator.UmsAccount;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
+import org.hhoa.vi.mgb.model.generator.UmsRole;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -114,13 +115,13 @@ public class UmsRoleServiceImpl implements UmsRoleService, ApplicationRunner {
     }
 
     @Override
-    public List<UmsResource> getRoleResources(Long roleId) {
-        return roleResourceRelationService.getRoleResources(roleId, false);
+    public List<UmsResource> getRoleResourcesUseRoleCache(Long roleId) {
+        return roleResourceRelationService.getRoleResourcesUseRoleCache(roleId, false);
     }
 
     @Override
     public List<UmsResource> getRoleResources(Long roleId, Boolean disableCache) {
-        return roleResourceRelationService.getRoleResources(roleId, disableCache);
+        return roleResourceRelationService.getRoleResourcesUseRoleCache(roleId, disableCache);
     }
 
     @Override

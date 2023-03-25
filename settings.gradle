@@ -1,2 +1,10 @@
-rootProject.name = 'virus-isolation'
+rootProject.name = 'virus-isolation-server'
+
+include 'virus-isolation-server-common'
+include 'virus-isolation-server-mgb'
+include 'virus-isolation-server-security'
+include 'virus-isolation-server-mgb'
+include 'virus-isolation-server-admin'
+include 'virus-isolation-server-portal'
+include 'virus-isolation-server-search'
 

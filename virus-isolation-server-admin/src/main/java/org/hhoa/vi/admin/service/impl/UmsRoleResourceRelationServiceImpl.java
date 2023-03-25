@@ -1,18 +1,19 @@
-package com.hhoa.vblog.admin.service.impl;
+package org.hhoa.vi.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.dao.UmsRoleResourceRelationDao;
-import com.hhoa.vblog.admin.service.UmsResourceService;
-import com.hhoa.vblog.admin.service.UmsRoleResourceCacheService;
-import com.hhoa.vblog.admin.service.UmsRoleResourceRelationService;
-import com.hhoa.vblog.admin.service.UmsRoleService;
-import com.hhoa.vblog.common.exception.Asserts;
-import com.hhoa.vblog.mgb.model.UmsResource;
-import com.hhoa.vblog.mgb.model.UmsRole;
-import com.hhoa.vblog.mgb.model.UmsRoleResourceRelation;
+
 import lombok.RequiredArgsConstructor;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.mgb.dao.UmsRoleResourceRelationDao;
+import org.hhoa.vi.admin.service.UmsResourceService;
+import org.hhoa.vi.admin.service.UmsRoleResourceCacheService;
+import org.hhoa.vi.admin.service.UmsRoleResourceRelationService;
+import org.hhoa.vi.admin.service.UmsRoleService;
+import org.hhoa.vi.common.exception.Asserts;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
+import org.hhoa.vi.mgb.model.generator.UmsRole;
+import org.hhoa.vi.mgb.model.generator.UmsRoleResourceRelation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -102,11 +103,11 @@ public class UmsRoleResourceRelationServiceImpl implements UmsRoleResourceRelati
 
     @Override
     public List<UmsResource> getRoleResources(Long roleId) {
-        return getRoleResources(roleId, false);
+        return getRoleResourcesUseRoleCache(roleId, false);
     }
 
     @Override
-    public List<UmsResource> getRoleResources(Long roleId, Boolean disableCache) {
+    public List<UmsResource> getRoleResourcesUseRoleCache(Long roleId, Boolean disableCache) {
         UmsRole retRole = roleService.getRole(roleId);
         List<UmsResource> byRoleName;
         if (disableCache == null) {

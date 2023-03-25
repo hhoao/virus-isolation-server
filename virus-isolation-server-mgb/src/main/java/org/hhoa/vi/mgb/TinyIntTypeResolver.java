@@ -1,4 +1,4 @@
-package com.hhoa.vblog.mgb;
+package org.hhoa.vi.mgb;
 
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl;
@@ -14,7 +14,7 @@ public class TinyIntTypeResolver extends JavaTypeResolverDefaultImpl {
      */
     public TinyIntTypeResolver() {
         super();
-        super.typeMap.put(-6, new JavaTypeResolverDefaultImpl.JdbcTypeInformation("TINYINT", new FullyQualifiedJavaType(Integer.class.getName())));
+        super.typeMap.put(-6, new JdbcTypeInformation("TINYINT", new FullyQualifiedJavaType(Integer.class.getName())));
     }
 
 }

@@ -1,12 +1,12 @@
 package org.hhoa.vi.common.config;
 
-import com.hhoa.vblog.common.domain.SwaggerProperties;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.hhoa.vi.common.domain.SwaggerProperties;
 import org.springframework.context.annotation.Bean;
 
 import java.util.HashMap;

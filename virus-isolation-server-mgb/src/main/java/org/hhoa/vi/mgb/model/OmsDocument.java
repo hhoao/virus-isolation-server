@@ -1,4 +1,4 @@
-package org.hhoa.vi.mgb.bean;
+package org.hhoa.vi.mgb.model;
 
 /**
  * OmsDocument

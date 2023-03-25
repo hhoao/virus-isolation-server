@@ -1,0 +1,19 @@
+plugins {
+    id 'application'
+}
+
+dependencies {
+    implementation libs.mybatis.generator.core
+    implementation libs.mybatis.plus.boot.starter
+    implementation libs.mysql.connector.java
+    implementation libs.springdoc.openapi.webmvc.core
+    implementation libs.springdoc.openapi.ui
+    implementation libs.jasypt.spring.boot.starter
+}
+
+application {
+    mainClass = 'org.hhoa.vi.mgb.Generator'
+    def mysqlRootPassword = System.getenv('MYSQL_ROOT_PASSWORD')
+    //JVM参数
+    applicationDefaultJvmArgs = ['-DmysqlRootPassword=' + mysqlRootPassword]
+}

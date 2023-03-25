@@ -1,7 +1,8 @@
-package org.hhoa.vi.admin.bean;
+package org.hhoa.vi.portal.bean;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.hhoa.vi.mgb.model.IdentifyType;
 
 /**
  * 用户认证更新需要的参数

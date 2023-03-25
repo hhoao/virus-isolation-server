@@ -1,15 +1,19 @@
 package org.hhoa.vi.admin.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
-import org.hhoa.vi.admin.bean.IdentifyType;
 import org.hhoa.vi.admin.bean.UmsAccountAuthParam;
+import org.hhoa.vi.mgb.dao.UmsAccountAuthDao;
 import org.hhoa.vi.admin.service.UmsAccountAuthService;
 import org.hhoa.vi.common.exception.Asserts;
+import org.hhoa.vi.mgb.model.IdentifyType;
+import org.hhoa.vi.mgb.model.generator.UmsAccountAuth;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,25 +22,23 @@ import java.util.UUID;
  **/
 @Service
 @RequiredArgsConstructor
-public class RetUserAuthServiceImpl implements UmsAccountAuthService {
-    private final UmsAccountAuthMapper userAuthMapper;
+public class UmsAccountAuthServiceImpl implements UmsAccountAuthService {
+    private final UmsAccountAuthDao accountAuthMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public List<UmsAccountAuth> getAccountAuth(Long userId) {
-        UmsAccountAuthExample userAuthExample = new UmsAccountAuthExample();
-        userAuthExample.createCriteria().
-                andAccountIdEqualTo(userId);
-        return userAuthMapper.selectByExample(userAuthExample);
+    public List<UmsAccountAuth> getAccountAuth(Long accountId) {
+        UmsAccountAuth accountAuth = new UmsAccountAuth();
+        accountAuth.setAccountId(accountId);
+        return accountAuthMapper.selectList(new QueryWrapper<>(accountAuth));
     }
 
     @Override
-    public UmsAccountAuth getAccountAuth(Long userId, IdentifyType identifyType) {
-        UmsAccountAuthExample userAuthExample = new UmsAccountAuthExample();
-        userAuthExample.createCriteria().
-                andAccountIdEqualTo(userId).
-                andIdentityTypeEqualTo(identifyType.value());
-        List<UmsAccountAuth> retAccountAuths = userAuthMapper.selectByExample(userAuthExample);
+    public UmsAccountAuth getAccountAuth(Long accountId, IdentifyType identifyType) {
+        UmsAccountAuth accountAuth = new UmsAccountAuth();
+        accountAuth.setAccountId(accountId);
+        accountAuth.setIdentityType(identifyType.value());
+        List<UmsAccountAuth> retAccountAuths = accountAuthMapper.selectList(new QueryWrapper<>(accountAuth));
         if (retAccountAuths == null || retAccountAuths.size() == 0) {
             Asserts.fail("没有该验证方式");
         }
@@ -45,11 +47,10 @@ public class RetUserAuthServiceImpl implements UmsAccountAuthService {
 
     @Override
     public UmsAccountAuth getAccountAuth(IdentifyType identifyType, String identifier) {
-        UmsAccountAuthExample userAuthExample = new UmsAccountAuthExample();
-        userAuthExample.createCriteria().
-                andIdentifierEqualTo(identifier).
-                andIdentityTypeEqualTo(identifyType.value());
-        List<UmsAccountAuth> retAccountAuths = userAuthMapper.selectByExample(userAuthExample);
+        UmsAccountAuth accountAuth = new UmsAccountAuth();
+        accountAuth.setIdentifier(identifier);
+        accountAuth.setIdentityType(identifyType.value());
+        List<UmsAccountAuth> retAccountAuths = accountAuthMapper.selectList(new QueryWrapper<>(accountAuth));
         if (retAccountAuths == null || retAccountAuths.size() == 0) {
             Asserts.fail("没有该用户");
         }
@@ -58,124 +59,99 @@ public class RetUserAuthServiceImpl implements UmsAccountAuthService {
 
     @Override
     public boolean exists(IdentifyType identifyType, String identifier) {
-        UmsAccountAuthExample userAuthExample = new UmsAccountAuthExample();
-        userAuthExample.createCriteria().
-                andIdentityTypeEqualTo(identifyType.value()).
-                andIdentifierEqualTo(identifier);
-        List<UmsAccountAuth> retAccountAuths = userAuthMapper.selectByExample(userAuthExample);
+        UmsAccountAuth accountAuth = new UmsAccountAuth();
+        accountAuth.setIdentifier(identifier);
+        accountAuth.setIdentityType(identifyType.value());
+        List<UmsAccountAuth> retAccountAuths = accountAuthMapper.selectList(new QueryWrapper<>(accountAuth));
         return retAccountAuths != null && retAccountAuths.size() != 0;
     }
 
     @Override
-    public void bind(Long id, String identifier, IdentifyType identifyType) {
-        UmsAccountAuth userAuth = new UmsAccountAuth();
-        String s = UUID.randomUUID().toString();
-        userAuth.setAccountId(id);
-        userAuth.setIdentifier(identifier);
-        userAuth.setIdentityType(identifyType.value());
-        userAuth.setCredential(s);
-        userAuthMapper.insert(userAuth);
+    public void bind(Long accountId, String identifier, IdentifyType identifyType) {
+        List<UmsAccountAuth> accountAuth1 = getAccountAuth(accountId);
+        String credential = UUID.randomUUID().toString();
+        if (accountAuth1.size() > 0) {
+            credential = accountAuth1.get(0).getCredential();
+        }
+        UmsAccountAuth accountAuth = new UmsAccountAuth();
+        accountAuth.setAccountId(accountId);
+        accountAuth.setIdentifier(identifier);
+        accountAuth.setIdentityType(identifyType.value());
+        accountAuth.setCredential(credential);
+        accountAuthMapper.insert(accountAuth);
     }
 
 
     @Override
-    public void updateCredential(Long userId, String credential) {
-        List<UmsAccountAuth> userAuths = getAccountAuth(userId);
-        for (UmsAccountAuth userAuth : userAuths) {
-            userAuth.setCredential(passwordEncoder.encode(credential));
-            int i = userAuthMapper.updateByPrimaryKey(userAuth);
+    public void updateCredential(Long accountId, String credential) {
+        List<UmsAccountAuth> accountAuths = getAccountAuth(accountId);
+        for (UmsAccountAuth accountAuth : accountAuths) {
+            accountAuth.setCredential(passwordEncoder.encode(credential));
+            int i = accountAuthMapper.updateById(accountAuth);
             if (i == 0) {
                 Asserts.fail("更新失败");
             }
         }
     }
 
-    private UmsAccountAuthExample getAccountAuthExample(UmsAccountAuth userAuth) {
-        UmsAccountAuthExample userAuthExample = new UmsAccountAuthExample();
-        UmsAccountAuthExample.Criteria criteria = userAuthExample.createCriteria();
-        if (userAuth.getId() != null) {
-            criteria.andIdEqualTo(userAuth.getId());
-            return userAuthExample;
-        }
-        if (userAuth.getAccountId() != null) {
-            criteria.andAccountIdEqualTo(userAuth.getAccountId());
-            return userAuthExample;
-        }
-        if (userAuth.getIdentifier() != null) {
-            criteria.andIdentifierEqualTo(userAuth.getIdentifier());
-            return userAuthExample;
-        }
-        if (userAuth.getCredential() != null && userAuth.getAccountId() != null) {
-            String newCredential = passwordEncoder.encode(userAuth.getCredential());
-            criteria.andCredentialEqualTo(newCredential);
-        }
-        if (userAuth.getIdentityType() != null) {
-            criteria.andIdentityTypeEqualTo(userAuth.getIdentityType());
-        }
-        return userAuthExample;
-    }
 
     @Override
-    public void deleteAllAccountAuth(Long userId) {
-        UmsAccountAuthExample userAuthExample = new UmsAccountAuthExample();
-        userAuthExample.createCriteria().
-                andAccountIdEqualTo(userId);
-        List<UmsAccountAuth> retAccountAuths = userAuthMapper.selectByExample(userAuthExample);
-        for (UmsAccountAuth userAuth : retAccountAuths) {
-            userAuthMapper.deleteByPrimaryKey(userAuth.getId());
-            userAuthMapper.deleteByPrimaryKey(userAuth.getId());
+    public void deleteAllAccountAuth(Long accountId) {
+        UmsAccountAuth accountAuthParam = new UmsAccountAuth();
+        accountAuthParam.setAccountId(accountId);
+        List<UmsAccountAuth> retAccountAuths = accountAuthMapper.selectList(new QueryWrapper<>(accountAuthParam));
+        for (UmsAccountAuth accountAuth : retAccountAuths) {
+            accountAuthMapper.deleteById(accountAuth.getId());
         }
     }
 
     @Override
-    public void updateAccountAuth(Long userId, IdentifyType identifyType, UmsAccountAuthParam userAuthParam) {
-        UmsAccountAuth oldAccountAuth = getAccountAuth(userId, identifyType);
-        UmsAccountAuth userAuth = new UmsAccountAuth();
-        BeanUtils.copyProperties(userAuthParam, userAuth);
+    public void updateAccountAuth(Long accountId, IdentifyType identifyType, UmsAccountAuthParam accountAuthParam) {
+        UmsAccountAuth oldAccountAuth = getAccountAuth(accountId, identifyType);
+        UmsAccountAuth accountAuth = new UmsAccountAuth();
+        BeanUtils.copyProperties(accountAuthParam, accountAuth);
 
-        userAuth.setId(oldAccountAuth.getId());
-        userAuthMapper.updateByPrimaryKeySelective(userAuth);
-        if (userAuthParam.getCredential() != null) {
-            updateCredential(userId, userAuthParam.getCredential());
+        accountAuth.setId(oldAccountAuth.getId());
+        accountAuthMapper.updateById(accountAuth);
+        if (accountAuthParam.getCredential() != null) {
+            updateCredential(accountId, accountAuthParam.getCredential());
         }
     }
 
     @Override
-    public Long getAccountIdByAccountName(String username) {
-        UmsAccountAuth usernameAuth = getAccountAuth(IdentifyType.username, username);
+    public Long getAccountIdByAccountName(String accountname) {
+        UmsAccountAuth usernameAuth = getAccountAuth(IdentifyType.username, accountname);
         return usernameAuth.getAccountId();
     }
 
     @Override
-    public void deleteAccountAuth(Long userId, IdentifyType authType) {
-        UmsAccountAuth userAuth = getAccountAuth(userId, authType);
-        int i = userAuthMapper.deleteByPrimaryKey(userAuth.getId());
-        if (i == 0) {
-            Asserts.fail("删除失败");
-        }
+    public void deleteAccountAuth(Long accountId, String authType) {
+        UmsAccountAuth accountAuth = new UmsAccountAuth();
+        accountAuth.setAccountId(accountId);
+        accountAuth.setIdentityType(authType);
+        accountAuthMapper.delete(new QueryWrapper<>(accountAuth));
     }
 
     @Override
     public UmsAccountAuth getAccountAuth(String identifier) {
-        UmsAccountAuthExample userAuthExample = new UmsAccountAuthExample();
-        userAuthExample.createCriteria().andIdentifierEqualTo(identifier);
-        List<UmsAccountAuth> retAccountAuths = userAuthMapper.selectByExample(userAuthExample);
-        if (retAccountAuths == null || retAccountAuths.size() == 0) {
+        UmsAccountAuth accountAuth = new UmsAccountAuth();
+        accountAuth.setIdentifier(identifier);
+        List<UmsAccountAuth> umsAccountAuths = accountAuthMapper.selectList(new QueryWrapper<>(accountAuth));
+        if (umsAccountAuths == null || umsAccountAuths.size() == 0) {
             Asserts.fail("没有该用户");
         }
-        if (retAccountAuths.size() > 1) {
+        if (umsAccountAuths.size() > 1) {
             Asserts.fail("该认证标识数量不少于一个");
         }
 
-        return retAccountAuths.get(0);
+        return umsAccountAuths.get(0);
     }
 
     @Override
-    public boolean exists(Long userId, IdentifyType email) {
-        UmsAccountAuthExample userAuthExample = new UmsAccountAuthExample();
-        userAuthExample.createCriteria().
-                andAccountIdEqualTo(userId).
-                andIdentityTypeEqualTo(email.toString());
-        return userAuthMapper.selectByExample(userAuthExample).size() != 0;
+    public boolean exists(Long accountId, IdentifyType identifyType) {
+        UmsAccountAuth accountAuth = new UmsAccountAuth();
+        accountAuth.setAccountId(accountId);
+        accountAuth.setIdentityType(identifyType.value());
+        return accountAuthMapper.exists(new QueryWrapper<>(accountAuth));
     }
 }

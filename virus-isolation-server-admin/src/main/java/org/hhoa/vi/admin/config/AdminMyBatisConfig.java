@@ -1,4 +1,4 @@
-package com.hhoa.vblog.admin.config;
+package org.hhoa.vi.admin.config;
 
 
 import org.mybatis.spring.annotation.MapperScan;
@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Configuration;
  * @since 2022/5/5
  **/
 @Configuration
-@MapperScan(basePackages = {"com.hhoa.vblog.admin.dao", "com.hhoa.vblog.mgb.mapper"})
+@MapperScan(basePackages = {"org.hhoa.vi.admin.dao", "org.hhoa.vi.mgb.dao"})
 public class AdminMyBatisConfig {
 }

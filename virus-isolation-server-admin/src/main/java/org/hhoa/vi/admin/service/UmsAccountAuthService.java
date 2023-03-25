@@ -1,8 +1,8 @@
 package org.hhoa.vi.admin.service;
 
 
-import org.hhoa.vi.admin.bean.IdentifyType;
 import org.hhoa.vi.admin.bean.UmsAccountAuthParam;
+import org.hhoa.vi.mgb.model.IdentifyType;
 import org.hhoa.vi.mgb.model.generator.UmsAccountAuth;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,14 +53,15 @@ public interface UmsAccountAuthService {
     boolean exists(IdentifyType identifyType, String identifier);
 
     /**
-     * Bind.
+     * 绑定默认使用其他认证密码，如果没有其他认证，将生成一个未知密码.
+     * 若要使用密码，则使用修改密码API
      *
-     * @param id           the id
+     * @param accountId    the accountId
      * @param identifier   the identifier
      * @param identifyType the identifyType
      */
     @Transactional
-    void bind(Long id, String identifier, IdentifyType identifyType);
+    void bind(Long accountId, String identifier, IdentifyType identifyType);
 
     /**
      * Update credential.
@@ -103,7 +104,7 @@ public interface UmsAccountAuthService {
      * @param userId   the user id
      * @param authType the auth type
      */
-    void deleteAccountAuth(Long userId, IdentifyType authType);
+    void deleteAccountAuth(Long userId, String authType);
 
     /**
      * Gets user auth.
@@ -116,9 +117,9 @@ public interface UmsAccountAuthService {
     /**
      * Exists boolean.
      *
-     * @param userId the user id
-     * @param email  the email
+     * @param userId       the user id
+     * @param identifyType the identify type
      * @return the boolean
      */
-    boolean exists(Long userId, IdentifyType email);
+    boolean exists(Long userId, IdentifyType identifyType);
 }

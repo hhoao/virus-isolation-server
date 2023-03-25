@@ -1,19 +1,20 @@
-package com.hhoa.vblog.admin.service.impl;
+package org.hhoa.vi.admin.service.impl;
 
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.bean.UmsResourceParam;
-import com.hhoa.vblog.admin.dao.UmsResourceDao;
-import com.hhoa.vblog.admin.service.UmsResourceService;
-import com.hhoa.vblog.admin.service.UmsRoleResourceRelationService;
-import com.hhoa.vblog.admin.service.UmsRoleService;
-import com.hhoa.vblog.common.exception.Asserts;
-import com.hhoa.vblog.mgb.model.UmsResource;
-import com.hhoa.vblog.mgb.model.UmsRole;
+
 import lombok.RequiredArgsConstructor;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.admin.bean.UmsResourceParam;
+import org.hhoa.vi.mgb.dao.UmsResourceDao;
+import org.hhoa.vi.admin.service.UmsResourceService;
+import org.hhoa.vi.admin.service.UmsRoleResourceRelationService;
+import org.hhoa.vi.admin.service.UmsRoleService;
+import org.hhoa.vi.common.exception.Asserts;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
+import org.hhoa.vi.mgb.model.generator.UmsRole;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;

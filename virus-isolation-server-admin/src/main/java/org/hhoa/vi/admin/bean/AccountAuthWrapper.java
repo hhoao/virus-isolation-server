@@ -1,4 +1,4 @@
-package org.hhoa.vi.portal.bean;
+package org.hhoa.vi.admin.bean;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ import org.hhoa.vi.mgb.model.generator.UmsAccountAuth;
 public class AccountAuthWrapper {
     @Schema(description = "用户基本信息")
     private UmsAccount accountInfo;
-    
+
     @Schema(description = "用户认证类型")
     private String identityType;
 

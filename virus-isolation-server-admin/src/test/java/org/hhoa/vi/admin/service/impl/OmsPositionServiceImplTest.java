@@ -17,7 +17,7 @@ import java.util.List;
  * @since 2023/3/19
  **/
 
-class OmsPositionServiceImplTestService extends ServiceTransactionTest {
+class OmsPositionServiceImplTest extends ServiceTransactionTest {
 
     @Autowired
     private OmsPositionService positionService;

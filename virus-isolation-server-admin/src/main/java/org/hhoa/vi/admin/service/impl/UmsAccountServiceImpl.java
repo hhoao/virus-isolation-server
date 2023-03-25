@@ -1,23 +1,31 @@
-package com.hhoa.vblog.admin.service.impl;
+package org.hhoa.vi.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
-import com.hhoa.vblog.admin.bean.PageInfo;
-import com.hhoa.vblog.admin.bean.UmsAccountDetails;
-import com.hhoa.vblog.admin.bean.UmsAccountWrapper;
-import com.hhoa.vblog.admin.bean.UmsLoginParam;
-import com.hhoa.vblog.admin.dao.UmsAccountDao;
-import com.hhoa.vblog.admin.service.UmsAccountCacheService;
-import com.hhoa.vblog.admin.service.UmsAccountService;
-import com.hhoa.vblog.admin.service.UmsRoleService;
-import com.hhoa.vblog.common.exception.Asserts;
-import com.hhoa.vblog.mgb.model.UmsAccount;
-import com.hhoa.vblog.mgb.model.UmsResource;
-import com.hhoa.vblog.mgb.model.UmsRole;
-import com.hhoa.vblog.security.util.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hhoa.vi.admin.bean.AccountAuthWrapper;
+import org.hhoa.vi.admin.bean.PageInfo;
+import org.hhoa.vi.admin.bean.UmsAccountAuthParam;
+import org.hhoa.vi.admin.bean.UmsAccountDetails;
+import org.hhoa.vi.admin.bean.UmsAccountWrapper;
+import org.hhoa.vi.admin.bean.UmsLoginParam;
+import org.hhoa.vi.admin.service.UmsAccountAuthService;
+import org.hhoa.vi.admin.service.UmsAccountCacheService;
+import org.hhoa.vi.admin.service.UmsAccountService;
+import org.hhoa.vi.admin.service.UmsRoleService;
+import org.hhoa.vi.common.exception.Asserts;
+import org.hhoa.vi.mgb.dao.OmsAccountOrganizationDao;
+import org.hhoa.vi.mgb.dao.UmsAccountDao;
+import org.hhoa.vi.mgb.model.AccountOrganization;
+import org.hhoa.vi.mgb.model.IdentifyType;
+import org.hhoa.vi.mgb.model.OrganizationPosition;
+import org.hhoa.vi.mgb.model.generator.UmsAccount;
+import org.hhoa.vi.mgb.model.generator.UmsAccountAuth;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
+import org.hhoa.vi.mgb.model.generator.UmsRole;
+import org.hhoa.vi.security.util.JwtTokenService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,28 +48,31 @@ public class UmsAccountServiceImpl implements UmsAccountService {
     private final UmsAccountCacheService accountCacheService;
 
     private final UmsAccountDao accountDao;
+    private final UmsAccountAuthService accountAuthService;
 
     private final JwtTokenService jwtTokenService;
     private final UmsRoleService roleService;
+    private final OmsAccountOrganizationDao accountOrganizationDao;
 
     @Override
     public String login(UmsLoginParam loginParam) {
         String token = null;
         try {
-            UmsAccount account = getAccountByAccountName(loginParam.getUsername());
-            if (!passwordEncoder.matches(loginParam.getPassword(), account.getPassword())) {
+            UmsAccount account = getAccountByAccountNameUseAccountDetailsCache(loginParam.getUsername());
+            UmsAccountAuth accountAuth = accountAuthService.getAccountAuth(account.getId(), IdentifyType.username);
+            if (!passwordEncoder.matches(loginParam.getPassword(), accountAuth.getCredential())) {
                 Asserts.fail("密码错误");
             }
             if (!account.getStatus()) {
                 Asserts.fail("用户已被冻结");
             }
-            UmsAccountDetails accountDetails = getAccountDetails(account.getUsername());
+            UmsAccountDetails accountDetails = getAccountDetails(accountAuth.getIdentifier());
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(accountDetails,
                             null, accountDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            accountCacheService.setKey(account.getUsername(), accountDetails);
-            token = jwtTokenService.generateToken(account.getUsername());
+            accountCacheService.setKey(accountAuth.getIdentifier(), accountDetails);
+            token = jwtTokenService.generateToken(accountAuth.getIdentifier());
             log.info(accountDetails.getUsername() + "登录成功");
         } catch (AuthenticationException e) {
             log.warn("登录异常:{}", e.getMessage());
@@ -81,16 +92,36 @@ public class UmsAccountServiceImpl implements UmsAccountService {
     }
 
     private UmsAccountDetails getAccountDetailsNoCache(String accountName) {
-        QueryWrapper<UmsAccount> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", accountName);
-        List<UmsAccount> umsAccounts = accountDao.selectList(queryWrapper);
-        if (umsAccounts.size() == 0) {
+        Long accountIdByAccountName = accountAuthService.getAccountIdByAccountName(accountName);
+        UmsAccount umsAccount1 = accountDao.selectById(accountIdByAccountName);
+        if (umsAccount1 == null) {
             Asserts.fail("没有该用户名");
         }
-        UmsAccount umsAccount = accountDao.selectById(umsAccounts.get(0));
+        UmsAccount umsAccount = accountDao.selectById(umsAccount1);
         UmsAccount account = accountDao.selectById(umsAccount.getId());
         List<UmsResource> accountResources = getAccountResources(account.getId());
-        return new UmsAccountDetails(account, accountResources);
+        List<AccountOrganization> accountOrganizationsByAccountName = getAccountOrganizationsByAccountName(accountName);
+        List<OrganizationPosition> organizationPositions = accountOrganizationsByAccountName.stream().map(
+                accountOrganization ->
+                        new OrganizationPosition(
+                                accountOrganization.getId(),
+                                accountOrganization.getPositionId())).toList();
+        return new UmsAccountDetails(account, accountResources, organizationPositions);
+    }
+
+    private List<AccountOrganization> getAccountOrganizationsByAccountNameUseAccountDetailsCache(String accountName) {
+        UmsAccount accountByAccountName = getAccountByAccountNameUseAccountDetailsCache(accountName);
+        return accountOrganizationDao.getAccountOrganizations(accountByAccountName.getId());
+    }
+
+    private UmsAccount getAccountByAccountName(String name) {
+        Long accountIdByAccountName = accountAuthService.getAccountIdByAccountName(name);
+        return getAccounts(accountIdByAccountName);
+    }
+
+    private List<AccountOrganization> getAccountOrganizationsByAccountName(String accountName) {
+        UmsAccount accountByAccountName = getAccountByAccountName(accountName);
+        return accountOrganizationDao.getAccountOrganizations(accountByAccountName.getId());
     }
 
     private void refreshAccountDetailsCache(String accountName) {
@@ -127,28 +158,37 @@ public class UmsAccountServiceImpl implements UmsAccountService {
     }
 
     @Override
-    public UmsAccount getAccountByAccountName(String accountName) {
+    public UmsAccount getAccountByAccountNameUseAccountDetailsCache(String accountName) {
         UmsAccountDetails accountDetails = getAccountDetails(accountName);
         return accountDetails.getAccount();
     }
 
 
     @Override
-    public void updateAccount(UmsAccount newAccount) {
-        int i = accountDao.updateById(newAccount);
+    public void updateAccount(AccountAuthWrapper newAccount) {
+        int i = accountDao.updateById(newAccount.getAccountInfo());
         if (i == 0) {
             Asserts.fail("用户更新失败");
         }
-        UmsAccount account = getAccounts(newAccount.getId());
-        //刷新用户token，使用户需要重新登陆
-        if (newAccount.getStatus() != null || newAccount.getRoleId() != null) {
-            clearAccountStatus(account.getUsername());
+        UmsAccountAuth accountAuth = accountAuthService.getAccountAuth(
+                newAccount.getAccountInfo().getId(), IdentifyType.username);
+        if (newAccount.getIdentifier() != null && newAccount.getIdentityType() != null) {
+            UmsAccountAuthParam umsAccountAuthParam = new UmsAccountAuthParam();
+            umsAccountAuthParam.setIdentifier(newAccount.getIdentifier());
+            accountAuthService.updateAccountAuth(newAccount.getAccountInfo().getId(),
+                    IdentifyType.get(newAccount.getIdentityType()), umsAccountAuthParam);
+            clearAccountStatus(accountAuth.getIdentifier());
+            //刷新用户token，使用户需要重新登陆
+        } else if (newAccount.getAccountInfo().getStatus() != null ||
+                newAccount.getAccountInfo().getRoleId() != null
+        ) {
+            clearAccountStatus(accountAuth.getIdentifier());
         }
-        refreshAccountDetailsCache(account.getUsername());
+        refreshAccountDetailsCache(accountAuth.getIdentifier());
     }
 
     @Override
-    public List<UmsAccount> getAccounts(UmsAccount account) {
+    public List<UmsAccount> getAccount(UmsAccount account) {
         QueryWrapper<UmsAccount> accountQueryWrapper = new QueryWrapper<>(account);
         return accountDao.selectList(accountQueryWrapper);
     }
@@ -165,8 +205,11 @@ public class UmsAccountServiceImpl implements UmsAccountService {
 
     @Override
     public void deleteAccountByAccountId(Long accountId) {
-        UmsAccount account = getAccounts(accountId);
-        clearAccountStatus(account.getUsername());
+        //删除Auth
+        UmsAccountAuth accountAuth = accountAuthService.getAccountAuth(accountId, IdentifyType.username);
+        accountAuthService.deleteAllAccountAuth(accountId);
+        clearAccountStatus(accountAuth.getIdentifier());
+        //删除Account
         int i = accountDao.deleteById(accountId);
         if (i == 0) {
             Asserts.fail("删除失败");
@@ -176,32 +219,33 @@ public class UmsAccountServiceImpl implements UmsAccountService {
 
     @Override
     public void deleteAccounts(UmsAccount account) {
-        List<UmsAccount> accounts = getAccounts(account);
+        List<UmsAccount> accounts = getAccount(account);
+        accounts.forEach((queryAccount) -> {
+            accountAuthService.deleteAllAccountAuth(queryAccount.getId());
+        });
         for (UmsAccount delAccount : accounts) {
             accountDao.deleteById(delAccount.getId());
         }
     }
 
 
-
     @Override
     public List<UmsAccount> list(PageInfo pageInfo, UmsAccount account) {
         PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize());
-        return getAccounts(account);
+        return getAccount(account);
     }
 
     @Override
     public List<UmsResource> getAccountResources(Long accountId) {
         UmsAccount account = accountDao.selectById(accountId);
-        return roleService.getRoleResources(account.getRoleId());
+        return roleService.getRoleResourcesUseRoleCache(account.getRoleId());
     }
 
     @Override
     public UmsAccountWrapper getAccountByAuthorization(String authorization) {
         String accountName = jwtTokenService.getSubjectFromAuthorization(authorization);
-        UmsAccount account = new UmsAccount();
-        account.setUsername(accountName);
-        UmsAccount umsAccount = accountDao.selectOne(new QueryWrapper<>(account));
+        Long accountIdByAccountName = accountAuthService.getAccountIdByAccountName(accountName);
+        UmsAccount umsAccount = accountDao.selectById(accountIdByAccountName);
         UmsRole role = roleService.getRole(umsAccount.getRoleId());
         UmsAccountWrapper accountWrapper = new UmsAccountWrapper();
         BeanUtil.copyProperties(umsAccount, accountWrapper);
@@ -210,17 +254,13 @@ public class UmsAccountServiceImpl implements UmsAccountService {
     }
 
     @Override
-    public void addAccount(UmsAccount account) {
-        if (!StringUtils.hasLength(account.getUsername())
-                || !StringUtils.hasLength(account.getPassword())) {
-            Asserts.fail("请您输入用户名和密码");
+    public void addAccount(AccountAuthWrapper accountAuthWrapper) {
+        if (!StringUtils.hasLength(accountAuthWrapper.getIdentifier())) {
+            Asserts.fail("请您输入用户名");
         }
-        if (account.getRoleId() == null) {
-            Asserts.fail("请您输入角色");
-        }
-        String encode = passwordEncoder.encode(account.getPassword());
-        account.setPassword(encode);
-        int i = accountDao.insert(account);
+
+        long i = accountDao.insert(accountAuthWrapper.getAccountInfo());
+        accountAuthService.bind(i, accountAuthWrapper.getIdentifier(), IdentifyType.get(accountAuthWrapper.getIdentityType()));
         if (i == 0) {
             Asserts.fail("插入失败");
         }

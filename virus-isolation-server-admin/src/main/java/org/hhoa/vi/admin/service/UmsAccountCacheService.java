@@ -1,7 +1,7 @@
-package com.hhoa.vblog.admin.service;
+package org.hhoa.vi.admin.service;
 
 
-import com.hhoa.vblog.admin.bean.UmsAccountDetails;
+import org.hhoa.vi.admin.bean.UmsAccountDetails;
 
 /**
  * The interface Ums account cache service.

@@ -1,8 +1,9 @@
-package com.hhoa.vblog.search.service.impl;
+package org.hhoa.vi.search.service.impl;
 
-import com.hhoa.vblog.search.bean.EsArticle;
-import com.hhoa.vblog.search.repository.EsArticleRepository;
-import com.hhoa.vblog.search.service.EsArticleService;
+
+import org.hhoa.vi.search.bean.EsArticle;
+import org.hhoa.vi.search.repository.EsArticleRepository;
+import org.hhoa.vi.search.service.EsArticleService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;

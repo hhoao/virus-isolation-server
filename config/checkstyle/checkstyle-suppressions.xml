@@ -9,5 +9,5 @@
   <suppress checks="JavadocStyleCheck" files="GeneratedObject.java" lines="50-9999"/>
 -->
 <suppressions>
-    <suppress checks="[a-zA-Z0-9]*" files="vblog-mgb/*"/>
+    <suppress checks="[a-zA-Z0-9]*" files="virus-isolation/*"/>
 </suppressions>

@@ -1,3 +1,5 @@
+package org.hhoa.vi.build;
+
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -23,7 +25,10 @@ public class SpringBootDevConventions implements Plugin<Project> {
         project.getPlugins().apply(SpringBootPlugin.class);
         project.getDependencies().add("compileOnly", "org.springframework.boot:spring-boot-devtools");
         project.getDependencies().add("annotationProcessor", "org.projectlombok:lombok");
-        project.getDependencies().add("annotationProcessor","org.springframework.boot:spring-boot-configuration-processor");
+        project.getDependencies().add("compileOnly", "org.projectlombok:lombok");
+        project.getDependencies().add("testAnnotationProcessor", "org.projectlombok:lombok");
+        project.getDependencies().add("testCompileOnly", "org.projectlombok:lombok");
+        project.getDependencies().add("compileOnly","org.springframework.boot:spring-boot-configuration-processor");
         project.getDependencies().add("testImplementation", "org.springframework.boot:spring-boot-starter-test");
         project.getDependencies().add("testImplementation", "org.springframework.restdocs:spring-restdocs-mockmvc");
         project.getDependencies().add("testImplementation", "org.junit.jupiter:junit-jupiter");

@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 2022/6/3
  **/
 
-class UmsRoleServiceImplTestService extends ServiceTransactionTest {
+class UmsRoleServiceImplTest extends ServiceTransactionTest {
     private static final String testRoleName = "ROLE_ADMIN";
     @Autowired
     UmsRoleService roleService;

@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @since 2022/6/4
  **/
 
-class UmsResourceServiceImplTestService extends ServiceTransactionTest {
+class UmsResourceServiceImplTest extends ServiceTransactionTest {
     @Autowired
     UmsResourceService resourceService;
     @Autowired

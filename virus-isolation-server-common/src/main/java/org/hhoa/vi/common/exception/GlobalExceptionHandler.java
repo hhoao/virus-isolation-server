@@ -1,6 +1,7 @@
 package org.hhoa.vi.common.exception;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.hhoa.vi.common.api.CommonResult;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindException;

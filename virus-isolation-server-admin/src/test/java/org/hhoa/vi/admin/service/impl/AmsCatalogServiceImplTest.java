@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2022/12/20
  **/
 
-class AmsCatalogServiceImplTestService extends ServiceTransactionTest {
+class AmsCatalogServiceImplTest extends ServiceTransactionTest {
     @Autowired
     AmsCatalogService catalogService;
 

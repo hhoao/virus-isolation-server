@@ -1,4 +1,4 @@
-package com.hhoa.vblog.search.config;
+package org.hhoa.vi.search.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;

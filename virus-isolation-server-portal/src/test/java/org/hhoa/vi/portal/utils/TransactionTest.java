@@ -1,6 +1,10 @@
-package org.hhoa.vi.portal;
+package org.hhoa.vi.portal.utils;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hhoa.vi.common.api.CommonResult;
+import org.hhoa.vi.portal.VIPortalApplication;
 import org.hhoa.vi.portal.bean.ResponseTokenInfo;
 import org.hhoa.vi.portal.bean.UmsLoginParam;
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +18,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 
+import java.util.Map;
+
 /**
  * TransactionTest.
  *
@@ -21,6 +27,7 @@ import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
  * @since 2022/5/31
  **/
 
+@SuppressWarnings("unchecked")
 @SpringBootTest(classes = VIPortalApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public abstract class TransactionTest {
@@ -29,7 +36,10 @@ public abstract class TransactionTest {
     TransactionStatus transactionStatus;
     private TestRestTemplate notVerifiedTemplate;
     private TestRestTemplate adminVerifiedTemplate;
+    private TestRestTemplate guestVerifiedTemplate;
     private TestRestTemplate testVerifiedTemplate;
+    @Autowired
+    private ObjectMapper objectMapper;
     @Value("${rest-template.root-uri}")
     private String rootUri;
 
@@ -41,28 +51,48 @@ public abstract class TransactionTest {
     public TestRestTemplate getNotVerifiedTemplate() {
         return notVerifiedTemplate;
     }
+    public TestRestTemplate getGuestVerifiedTemplate() {
+        if (guestVerifiedTemplate == null) {
+            UmsLoginParam umsLoginParam = new UmsLoginParam("test3", "123456");
+            CommonResult<Map<String, String>> commonResult =
+                    (CommonResult<Map<String, String>>) notVerifiedTemplate.postForObject(
+                            "/accounts/auth/token", umsLoginParam, CommonResult.class);
+            guestVerifiedTemplate = new TestRestTemplate(
+                    new RestTemplateBuilder().
+                            rootUri(rootUri).
+                            defaultHeader("Authorization",
+                                    commonResult.getResult().get("tokenHead") +
+                                            commonResult.getResult().get("token"))
+            );
+        }
+
+        return guestVerifiedTemplate;
+    }
 
     /**
      * 获取Admin用户登陆后的RestTemplate
      *
      * @return Admin用户登陆后的RestTemplate
      */
+    @SuppressWarnings("unchecked")
     public TestRestTemplate getAdminVerifiedTemplate() {
         if (adminVerifiedTemplate == null) {
             UmsLoginParam umsLoginParam = new UmsLoginParam("admin", "123456");
-            ResponseTokenInfo responseTokenInfo =
-                    notVerifiedTemplate.postForObject(
-                            "/accounts/auth/token", umsLoginParam, ResponseTokenInfo.class);
+            CommonResult<Map<String, String>> commonResult =
+                    (CommonResult<Map<String, String>>) notVerifiedTemplate.postForObject(
+                            "/accounts/auth/token", umsLoginParam, CommonResult.class);
             adminVerifiedTemplate = new TestRestTemplate(
                     new RestTemplateBuilder().
                             rootUri(rootUri).
                             defaultHeader("Authorization",
-                                    responseTokenInfo.getTokenHead() + responseTokenInfo.getToken())
+                                    commonResult.getResult().get("tokenHead") +
+                                            commonResult.getResult().get("token"))
             );
         }
 
         return adminVerifiedTemplate;
     }
+
 
     /**
      * 获取Test用户登陆后的RestTemplate
@@ -71,15 +101,20 @@ public abstract class TransactionTest {
      */
     public TestRestTemplate getTestVerifiedTemplate() {
         if (testVerifiedTemplate == null) {
-            UmsLoginParam umsLoginParam = new UmsLoginParam("test", "123456");
-            ResponseTokenInfo responseTokenInfo =
-                    notVerifiedTemplate.postForObject(
-                            "/accounts/auth/token", umsLoginParam, ResponseTokenInfo.class);
+            UmsLoginParam umsLoginParam = new UmsLoginParam("test1", "123456");
+
+            String commonResult = notVerifiedTemplate.postForObject(
+                    "/accounts/auth/token", umsLoginParam, String.class);
+            CommonResult<ResponseTokenInfo> responseTokenInfoCommonResult =
+                    TestUtils.jsonStringToObject(commonResult, new TypeReference<CommonResult<ResponseTokenInfo>>() {
+                    });
+
             testVerifiedTemplate = new TestRestTemplate(
                     new RestTemplateBuilder().
                             rootUri(rootUri).
                             defaultHeader("Authorization",
-                                    responseTokenInfo.getTokenHead() + responseTokenInfo.getToken())
+                                    responseTokenInfoCommonResult.getResult().getTokenHead() +
+                                            responseTokenInfoCommonResult.getResult().getToken())
             );
         }
         return testVerifiedTemplate;

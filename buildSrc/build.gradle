@@ -1,15 +1,43 @@
 plugins {
-    id 'groovy-gradle-plugin'
+    id "java-gradle-plugin"
+    id "io.spring.javaformat" version "0.0.35"
+    id 'java'
+    alias(libs.plugins.spotbugs.gradle.plugin )
+    alias(libs.plugins.boot)
+    alias(libs.plugins.io.spring.dependency.management)
+    id "checkstyle"
 }
 repositories {
     gradlePluginPortal()
 }
 
 dependencies {
+    checkstyle "io.spring.javaformat:spring-javaformat-checkstyle:0.0.35"
+    implementation "org.springframework.boot:org.springframework.boot.gradle.plugin:2.7.1"
+    implementation("io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.35")
+    implementation("io.spring.gradle:dependency-management-plugin:1.0.10.RELEASE")
+    implementation "org.junit.platform:junit-platform-launcher:1.9.0-RC1"
+    implementation 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    implementation 'org.junit.jupiter:junit-jupiter'
     implementation libs.spotbugs.gradle.plugin
-    testImplementation platform(libs.spock.bom)
-    testImplementation 'org.spockframework:spock-core'
 }
 
+gradlePlugin {
+    plugins {
+        javaConventionsPlugin {
+            id = "org.hhoa.vi.java-conventions"
+            implementationClass = "org.hhoa.vi.build.JavaConventions"
+        }
+        springBootDevConventionsPlugin {
+            id = "org.hhoa.vi.springboot-dev-conventions"
+            implementationClass = "org.hhoa.vi.build.SpringBootDevConventions"
+        }
+    }
+}
 
 

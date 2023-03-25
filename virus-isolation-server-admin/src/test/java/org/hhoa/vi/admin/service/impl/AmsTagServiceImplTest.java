@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2022/12/20
  **/
 
-class AmsTagServiceImplTestService extends ServiceTransactionTest {
+class AmsTagServiceImplTest extends ServiceTransactionTest {
     @Autowired
     AmsTagService tagService;
 

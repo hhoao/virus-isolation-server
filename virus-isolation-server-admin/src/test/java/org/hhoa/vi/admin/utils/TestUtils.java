@@ -1,8 +1,10 @@
-package org.hhoa.vi.portal.utils;
+package org.hhoa.vi.admin.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Map;
 
 /**
  * TestUtils
@@ -30,5 +32,24 @@ public class TestUtils {
             throw new RuntimeException(e);
         }
         return obj;
+    }
+
+    /**
+     * 将对象转换为请求参数
+     * @param object 对象
+     * @return 请求参数
+     */
+    public static String ObjectToParametersString(Object object){
+        if (object == null) {
+            return "";
+        }
+        Map<String, String> parametersMap= objectMapper.convertValue(object, new TypeReference<Map<String, String>>() {});
+        StringBuilder parameter = new StringBuilder();
+        for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
+            if (entry.getValue() != null) {
+                parameter.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+            }
+        }
+        return parameter.deleteCharAt(parameter.length() - 1).toString();
     }
 }

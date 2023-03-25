@@ -1,4 +1,4 @@
-package com.hhoa.vblog.admin.config;
+package org.hhoa.vi.admin.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;

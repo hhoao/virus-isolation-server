@@ -1,4 +1,4 @@
-package com.hhoa.vblog.admin.bean;
+package org.hhoa.vi.admin.bean;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

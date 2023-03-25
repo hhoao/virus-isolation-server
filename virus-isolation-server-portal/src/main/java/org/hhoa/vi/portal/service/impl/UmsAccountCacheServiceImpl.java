@@ -22,11 +22,11 @@ import org.springframework.stereotype.Service;
 @Service
 //@RequiredArgsConstructor
 public class UmsAccountCacheServiceImpl implements UmsAccountCacheService {
-    @Value("${ret.redis.database}")
+    @Value("${project.redis.database}")
     private String redisDatabase;
-    @Value("${ret.redis.expire.token}")
+    @Value("${project.redis.expire.token}")
     private Long redisExpire;
-    @Value("${ret.redis.key.administrator}")
+    @Value("${project.redis.key.administrator}")
     private String redisKey;
     private RedisService redisService;
 

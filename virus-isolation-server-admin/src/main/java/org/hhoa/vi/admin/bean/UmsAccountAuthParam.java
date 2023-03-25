@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @Schema(description= "用户认证参数")
-public class RetUserAuthParam {
+public class UmsAccountAuthParam {
     @Schema(description = "标识")
     private String identifier;
 

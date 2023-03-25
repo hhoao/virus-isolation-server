@@ -2,6 +2,7 @@ package org.hhoa.vi.portal.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.hhoa.vi.common.service.RedisService;
+import org.hhoa.vi.portal.service.OmsMailCacheService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +12,13 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 @RequiredArgsConstructor
-public class RetMailCacheServiceImpl implements RetMailCacheService {
+public class OmsMailCacheServiceImpl implements OmsMailCacheService {
     private final RedisService redisService;
-    @Value("${ret.redis.database}")
+    @Value("${project.redis.database}")
     private String redisDatabase;
-    @Value("${ret.redis.expire.mail}")
+    @Value("${project.redis.expire.mail}")
     private Long redisExpire;
-    @Value("${ret.redis.auth-code.mail}")
+    @Value("${project.redis.auth-code.mail}")
     private String redisKeyMailAuthCode;
 
     public String generateAuthCodeKey(String from, String to, String type){

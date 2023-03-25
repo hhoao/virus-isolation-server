@@ -1,7 +1,8 @@
-package com.hhoa.vblog.admin.bean;
+package org.hhoa.vi.admin.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * The type Response token info.
@@ -11,6 +12,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ResponseTokenInfo {
     private String token;
     private String tokenHead;

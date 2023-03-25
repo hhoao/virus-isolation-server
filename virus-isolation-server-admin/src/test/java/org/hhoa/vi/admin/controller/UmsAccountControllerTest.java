@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  * @since 2023/3/22
  **/
 
-class UmsAccountControllerTestService extends ServiceTransactionTest {
+class UmsAccountControllerTest extends ServiceTransactionTest {
 
     @Test
     void getAccount() {

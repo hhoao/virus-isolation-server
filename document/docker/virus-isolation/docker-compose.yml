@@ -2,14 +2,14 @@ version: "3.9"
 
 services:
   web-portal-setup:
-    image: ${DOCKER_HUB_USER_NAME}/vblog-web:${VBLOG_WEB_VERSION}
+    image: ${DOCKER_HUB_USER_NAME}/vi-web:${VI_WEB_VERSION}
     command: >
       sh -c '
-        if [ -d /usr/share/nginx/html/release/vblog-web ]; then
-          rm -rf /usr/share/nginx/html/release/vblog-web;
+        if [ -d /usr/share/nginx/html/release/vi-web ]; then
+          rm -rf /usr/share/nginx/html/release/vi-web;
         fi;
-        mkdir /usr/share/nginx/html/release/vblog-web;
-        cp -r /data/* /usr/share/nginx/html/release/vblog-web
+        mkdir /usr/share/nginx/html/release/vi-web;
+        cp -r /data/* /usr/share/nginx/html/release/vi-web
       '
     volumes:
       - env_web-data:/usr/share/nginx/html/release
@@ -17,15 +17,15 @@ services:
       - env-network
 
   web-admin-setup:
-    image: ${DOCKER_HUB_USER_NAME}/vblog-web-admin:${VBLOG_WEB_ADMIN_VERSION}
+    image: ${DOCKER_HUB_USER_NAME}/vi-web-admin:${VI_WEB_ADMIN_VERSION}
     command: >
       sh -c '
-        if [ -d /usr/share/nginx/html/release/vblog-web-admin ]; then
-          rm -rf /usr/share/nginx/html/release/vblog-web-admin;
+        if [ -d /usr/share/nginx/html/release/vi-web-admin ]; then
+          rm -rf /usr/share/nginx/html/release/vi-web-admin;
           echo portal existed;
         fi;
-        mkdir /usr/share/nginx/html/release/vblog-web-admin;
-        cp -r /data/* /usr/share/nginx/html/release/vblog-web-admin
+        mkdir /usr/share/nginx/html/release/vi-web-admin;
+        cp -r /data/* /usr/share/nginx/html/release/vi-web-admin
       '
     volumes:
       - env_web-data:/usr/share/nginx/html/release
@@ -36,14 +36,14 @@ services:
     image: nginx:1.23.3-alpine
     volumes:
       - env_nginx-conf:/etc/nginx/conf.d/
-      - ./vblog-web-nginx.conf:/vblog-web-nginx.conf
-    command: sh -c "cp /vblog-web-nginx.conf /etc/nginx/conf.d/default-locations"
+      - ./virus-isolation-web-nginx.conf:/virus-isolation-web-nginx.conf
+    command: sh -c "cp /virus-isolation-web-nginx.conf /etc/nginx/conf.d/default-locations"
     networks:
       - env-network
 
   server-admin:
-    container_name: vblog-server-admin
-    image: ${DOCKER_HUB_USER_NAME}/vblog-server-admin:${VBLOG_SERVER_ADMIN_VERSION}
+    container_name: vi-server-admin
+    image: ${DOCKER_HUB_USER_NAME}/vi-server-admin:${VI_SERVER_ADMIN_VERSION}
     environment:
       - SERVER_HOST=${SERVER_HOST}
       - REDIS_SERVER_HOST=${REDIS_SERVER_HOST}
@@ -55,7 +55,7 @@ services:
     volumes:
       - /projects/public/data/uploads:/projects/public/data/uploads
     ports:
-      - ${VBLOG_SERVER_ADMIN_PORT}:8888
+      - ${VI_SERVER_ADMIN_PORT}:8888
     healthcheck:
       test: [ "CMD-SHELL", "wget -q --spider localhost:8888/actuator/health" ]
       interval: 1s
@@ -63,8 +63,8 @@ services:
       retries: 120
 
   server-portal:
-    container_name: vblog-server-portal
-    image: ${DOCKER_HUB_USER_NAME}/vblog-server-portal:${VBLOG_SERVER_PORTAL_VERSION}
+    container_name: vi-server-portal
+    image: ${DOCKER_HUB_USER_NAME}/vi-server-portal:${VI_SERVER_PORTAL_VERSION}
     environment:
       - SERVER_HOST=${SERVER_HOST}
       - REDIS_SERVER_HOST=${REDIS_SERVER_HOST}
@@ -73,7 +73,7 @@ services:
     volumes:
       - /projects/public/data/uploads:/projects/public/data/uploads
     ports:
-      - ${VBLOG_SERVER_PORTAL_PORT}:8889
+      - ${VI_SERVER_PORTAL_PORT}:8889
     healthcheck:
       test: [ "CMD-SHELL", "wget -q --spider localhost:8889/actuator/health" ]
       interval: 1s
@@ -83,8 +83,8 @@ services:
       - env-network
 
   server-search:
-    container_name: vblog-server-search
-    image: ${DOCKER_HUB_USER_NAME}/vblog-server-search:${VBLOG_SERVER_SEARCH_VERSION}
+    container_name: vi-server-search
+    image: ${DOCKER_HUB_USER_NAME}/vi-server-search:${VI_SERVER_SEARCH_VERSION}
     environment:
       - ELASTIC_SERVER_HOST=${ELASTIC_SERVER_HOST}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
@@ -92,13 +92,13 @@ services:
       - env_es-certs:/data/elastic
       - /projects/public/data/uploads:/projects/public/data/uploads
     ports:
-      - ${VBLOG_SERVER_SEARCH_PORT}:8890
+      - ${VI_SERVER_SEARCH_PORT}:8890
     entrypoint: >
       sh -c '
         cp /data/elastic/ca/ca.crt /opt/openjdk-17/lib/security;
         keytool -import -noprompt -keystore /opt/openjdk-17/lib/security/cacerts -storepass changeit -keypass changeit -alias es01-cas -file /data/elastic/ca/ca.crt
         echo "DONE!"
-        java -jar -Dspring.profiles.active=prod /vblog-server-search-0.0.1-SNAPSHOT.jar
+        java -jar -Dspring.profiles.active=prod /vi-server-search-0.0.1-SNAPSHOT.jar
         ./
       '
     healthcheck:
@@ -122,12 +122,12 @@ services:
     image: nginx:1.23.3-alpine
     volumes:
       - env_nginx-conf:/etc/nginx/conf.d/
-      - ./vblog-server-nginx.conf:/vblog-server-nginx.conf
+      - ./virus-isolation-server-nginx.conf:/virus-isolation-server-nginx.conf
     command: |
       sh -c "
-        cp /vblog-server-nginx.conf /etc/nginx/conf.d/default-locations;
+        cp /vi-server-nginx.conf /etc/nginx/conf.d/default-locations;
         echo down;
-        java -jar -Dspring.profiles.active=prod /vblog-server-search-0.0.1-SNAPSHOT.jar
+        java -jar -Dspring.profiles.active=prod /vi-server-search-0.0.1-SNAPSHOT.jar
       "
 
   logstash-setup:
@@ -141,12 +141,12 @@ services:
     volumes:
       - env_es-certs:/data/elastic
       - env_logstash-pipeline:/usr/share/logstash/pipeline
-      - ./elasticsearch/vblog-logstash.conf:/vblog-logstash.conf
+      - ./elasticsearch/vi-logstash.conf:/vi-logstash.conf
       - ./elasticsearch/articles.sh:/articles.sh
     command: >
       bash -c '
         /articles.sh
-        cp /vblog-logstash.conf /usr/share/logstash/pipeline/
+        cp /vi-logstash.conf /usr/share/logstash/pipeline/
       '
     networks:
       - env-network

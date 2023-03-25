@@ -38,6 +38,16 @@ public class CommonResult<T> {
     /**
      * 成功返回结果.
      *
+     * @param <T>  数据类型的泛型
+     * @return 封装结果
+     */
+    public static <T> CommonResult<T> success() {
+        return new CommonResult<>(ResultCode.SUCCESS.getCode(),
+                ResultCode.SUCCESS.getMessage(), null);
+    }
+    /**
+     * 成功返回结果.
+     *
      * @param result 要封装的数据
      * @param <T>  数据类型的泛型
      * @return 封装结果

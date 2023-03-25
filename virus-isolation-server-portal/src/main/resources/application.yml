@@ -13,10 +13,13 @@ spring:
       date: iso
       date-time: yyyy-MM-dd HH:mm:ss
 
+rest-template:
+  root-uri: http://127.0.0.1:8889/
+
 # 项目配置
-ret:
+project:
   redis:
-    database: ret
+    database: vi
     key:
       administrator: administrator
       role: role
@@ -24,11 +27,17 @@ ret:
     expire:
       common: 86400 # 24小时
       token: 86400
+      mail: 60
+    auth-code:
+      mail: mail
+      phone: phone
+
 
 # 配置mybatis
 mybatis:
   mapper-locations:
-    - classpath:mybatis/dao/*.xml
+    - classpath:org/hhoa/vi/portal/dao/*.xml
+    - classpath:org/hhoa/vi/mgb/dao/*.xml
 
 jwt:
   secret: ${JWT_SECRET}
@@ -37,17 +46,23 @@ jwt:
   token-head: 'Bearer'
   refresh-time: 30
   filter:
-    authenticated: false
+    authenticated: true
     ignored:
+      - /swagger-ui/**
+      - /swagger-ui.html
+      - /v3/api-docs
+      - /v3/api-docs/**
+      - /**/*.js
+      - /**/*.css
+      - /**/*.png
+      - /**/*.ico
+      - /accounts/auth/token
       - /actuator/health
-    include:
-      - /actuator/**
-
 
 logging:
   level:
     root: info
-    com.hhoa.vblog: debug
+    com.hhoa.vi: debug
 
 pagehelper:
   pageSizeZero: true

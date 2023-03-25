@@ -1,4 +1,4 @@
-package com.hhoa.vblog.search.bean;
+package org.hhoa.vi.search.bean;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.domain.AbstractPageRequest;

@@ -1,7 +1,7 @@
-package org.hhoa.vi.portal.impl;
+package org.hhoa.vi.portal.service.impl;
 
 import org.hhoa.vi.mgb.model.generator.UmsResource;
-import org.hhoa.vi.portal.TransactionTest;
+import org.hhoa.vi.portal.utils.TransactionTest;
 import org.hhoa.vi.portal.service.UmsResourceService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,10 +1,11 @@
-package com.hhoa.vblog.admin.service.impl;
+package org.hhoa.vi.admin.service.impl;
 
 
-import com.hhoa.vblog.admin.service.UmsRoleCacheService;
-import com.hhoa.vblog.common.service.RedisService;
-import com.hhoa.vblog.mgb.model.UmsRole;
+
 import lombok.RequiredArgsConstructor;
+import org.hhoa.vi.admin.service.UmsRoleCacheService;
+import org.hhoa.vi.common.service.RedisService;
+import org.hhoa.vi.mgb.model.generator.UmsRole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UmsRoleCacheServiceImpl implements UmsRoleCacheService {
     private final RedisService redisService;
-    @Value("${ret.redis.database}")
+    @Value("${project.redis.database}")
     private String redisDatabase;
-    @Value("${ret.redis.expire.common}")
+    @Value("${project.redis.expire.common}")
     private Long redisExpire;
-    @Value("${ret.redis.key.role}")
+    @Value("${project.redis.key.role}")
     private String redisKeyRole;
 
     /**

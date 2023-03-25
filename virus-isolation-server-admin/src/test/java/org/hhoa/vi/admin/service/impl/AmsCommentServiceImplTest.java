@@ -21,7 +21,7 @@ import java.util.List;
  * @since 2022/12/20
  **/
 
-class AmsCommentServiceImplTestService extends ServiceTransactionTest {
+class AmsCommentServiceImplTest extends ServiceTransactionTest {
 
     @Autowired
     AmsCommentService commentService;

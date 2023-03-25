@@ -15,8 +15,8 @@
         <!-- 为生成的Java模型创建一个toString方法 -->
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
         <!--生成mapper.xml时覆盖原文件-->
-<!--        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>-->
-        <commentGenerator type="com.hhoa.vblog.mgb.CommentGenerator">
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+        <commentGenerator type="org.hhoa.vi.mgb.CommentGenerator">
             <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
             <property name="suppressAllComments" value="true"/>
             <property name="suppressDate" value="true"/>
@@ -30,12 +30,14 @@
             <property name="nullCatalogMeansCurrent" value="true"/>
         </jdbcConnection>
 
-        <javaTypeResolver type="com.hhoa.vblog.mgb.TinyIntTypeResolver">
+        <javaTypeResolver type="org.hhoa.vi.mgb.TinyIntTypeResolver">
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="com.hhoa.blog.mgb.model"
-                            targetProject="src/main/java"/>
+        <javaModelGenerator targetPackage="org.hhoa.vi.mgb.model.generator"
+                            targetProject="src/main/java">
+            <property name="constructorBased" value="true"/>
+        </javaModelGenerator>
 
 
         <!--生成全部表tableName设为%-->

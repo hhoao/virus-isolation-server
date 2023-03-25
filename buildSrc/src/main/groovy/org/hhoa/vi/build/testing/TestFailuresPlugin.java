@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package testing;
+package org.hhoa.vi.build.testing;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;

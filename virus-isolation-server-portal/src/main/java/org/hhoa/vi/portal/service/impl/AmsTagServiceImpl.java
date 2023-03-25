@@ -3,9 +3,9 @@ package org.hhoa.vi.portal.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import lombok.AllArgsConstructor;
-import org.hhoa.vi.mgb.model.AmsTag;
+import org.hhoa.vi.mgb.dao.AmsTagDao;
+import org.hhoa.vi.mgb.model.generator.AmsTag;
 import org.hhoa.vi.portal.bean.PageInfo;
-import org.hhoa.vi.portal.dao.AmsTagDao;
 import org.hhoa.vi.portal.service.AmsTagService;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
-package com.hhoa.vblog.admin.service;
+package org.hhoa.vi.admin.service;
 
 
-import com.hhoa.vblog.mgb.model.UmsResource;
+import org.hhoa.vi.mgb.model.generator.UmsResource;
 
 import java.util.List;
 

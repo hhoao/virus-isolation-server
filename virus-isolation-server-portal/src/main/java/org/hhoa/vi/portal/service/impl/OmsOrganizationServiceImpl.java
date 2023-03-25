@@ -1,13 +1,14 @@
-package org.hhoa.vi.admin.service.impl;
+package org.hhoa.vi.portal.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.github.pagehelper.PageHelper;
 import lombok.AllArgsConstructor;
-import org.hhoa.vi.admin.bean.OrganizationAccount;
-import org.hhoa.vi.admin.bean.PageInfo;
-import org.hhoa.vi.admin.dao.OmsOrganizationDao;
-import org.hhoa.vi.admin.service.OmsOrganizationService;
+import org.hhoa.vi.mgb.dao.OmsOrganizationDao;
+import org.hhoa.vi.mgb.model.OrganizationAccount;
 import org.hhoa.vi.mgb.model.generator.OmsOrganization;
+import org.hhoa.vi.portal.bean.OmsCreateOrganizationParam;
+import org.hhoa.vi.portal.bean.PageInfo;
+import org.hhoa.vi.mgb.dao.OmsAccountOrganizationDao;
+import org.hhoa.vi.portal.service.OmsOrganizationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,19 +21,29 @@ import java.util.List;
  */
 @AllArgsConstructor
 @Service
-public class OmsOrganizationServiceImpl  implements OmsOrganizationService {
+public class OmsOrganizationServiceImpl implements OmsOrganizationService {
     private OmsOrganizationDao omsOrganizationDao;
+    private OmsAccountOrganizationDao omsAccountOrganizationDao;
 
-    @Override
-    public List<OmsOrganization> list(OmsOrganization organizationParams, PageInfo pageInfo) {
-        PageHelper.startPage(pageInfo);
-        QueryWrapper<OmsOrganization> queryWrapper = new QueryWrapper<>();
-        return omsOrganizationDao.selectList(queryWrapper);
+
+    private boolean hasPermission(String accountName, Long organizationId, Long positionId) {
+        return omsAccountOrganizationDao.hasPermission(accountName, organizationId);
+    }
+
+    private boolean hasAdministratorPermission(String accountName, Long organizationId) {
+        return hasPermission(accountName, organizationId, 1L);
+    }
+
+    private boolean hasNormalPermission(String accountName, Long organizationId) {
+        return hasPermission(accountName, organizationId, 10L);
     }
 
     @Override
-    public void addOrganization(OmsOrganization organizationParam) {
+    public void addOrganization(OmsCreateOrganizationParam organizationParam) {
         omsOrganizationDao.insert(organizationParam);
+        OmsOrganization omsOrganization = omsOrganizationDao.selectOne(new QueryWrapper<>(organizationParam));
+        omsAccountOrganizationDao.insertByAccountNameAndOrganizationIdAndPositionId(
+                organizationParam.getUserName(), omsOrganization.getId(), 1L);
     }
 
     @Override
@@ -41,15 +52,16 @@ public class OmsOrganizationServiceImpl  implements OmsOrganizationService {
     }
 
     @Override
-    public void updateOrganization(OmsOrganization organizationParam) {
+    public void updateOrganization(OmsOrganization organizationParam, Long organizationId) {
         omsOrganizationDao.updateById(organizationParam);
     }
 
     @Override
     public List<OrganizationAccount> listOrganizationAccounts(PageInfo pageInfo, Long organizationId) {
-        PageHelper.startPage(pageInfo);
-        return omsOrganizationDao.listOrganizationAccounts(organizationId);
+        return omsOrganizationDao.listOrganizationAccounts(organizationId, );
     }
+
+
 
     @Override
     public void deleteOrganizationAccountByUserId(Long organizationId, Long userId) {
