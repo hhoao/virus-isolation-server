@@ -1,0 +1,27 @@
+server:
+  port: 8889
+spring:
+  # 配置redis
+  redis:
+    database: 3
+    port: 6480
+    password:
+    host: localhost
+  # 配置mysql数据库
+  datasource:
+    url: jdbc:mysql://localhost:3406/virus_isolation_test?autoReconnect=true&failOverReadOnly=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: ${MYSQL_ROOT_PASSWORD}
+  # 配置缓存
+  cache:
+    redis:
+      time-to-live: 1d
+rest-template:
+  root:
+    uri: http://127.0.0.1:8889
+
+file:
+  upload:
+    path: /projects/public/data/uploads/  #文件上传目标路径
+    baseUrl: http://localhost/uploads/

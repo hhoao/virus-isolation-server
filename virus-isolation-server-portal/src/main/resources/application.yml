@@ -1,0 +1,53 @@
+spring:
+  profiles:
+    active: dev #默认为开发环境
+  jackson:
+    default-property-inclusion: non_null
+  mvc:
+    hiddenmethod:
+      filter:
+        #设置restful风格
+        enabled: true
+    format:
+      #设置日期格式
+      date: iso
+      date-time: yyyy-MM-dd HH:mm:ss
+
+# 项目配置
+ret:
+  redis:
+    database: ret
+    key:
+      administrator: administrator
+      role: role
+      resource-role: resource-role
+    expire:
+      common: 86400 # 24小时
+      token: 86400
+
+# 配置mybatis
+mybatis:
+  mapper-locations:
+    - classpath:mybatis/dao/*.xml
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 604800
+  token-Header: Authorization
+  token-head: 'Bearer'
+  refresh-time: 30
+  filter:
+    authenticated: false
+    ignored:
+      - /actuator/health
+    include:
+      - /actuator/**
+
+
+logging:
+  level:
+    root: info
+    com.hhoa.vblog: debug
+
+pagehelper:
+  pageSizeZero: true

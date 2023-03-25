@@ -1,0 +1,42 @@
+package org.hhoa.vi.portal.bean;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author hhoa
+ * @date 2022/5/29
+ **/
+
+public enum IdentifyType {
+    /**
+     * 手机号
+     */
+    phone("phone"),
+    /**
+     * 邮件
+     */
+    email("email"),
+    /**
+     * 用户名
+     */
+    username("username");
+    private final String value;
+    IdentifyType(String value){
+        this.value = value;
+    }
+
+    public String value() {
+        return this.value;
+    }
+    private final static Map<String, IdentifyType> map;
+    static {
+        map = new HashMap<>();
+        for (IdentifyType identifyType : IdentifyType.values()) {
+            map.put(identifyType.value, identifyType);
+        }
+    }
+    public static IdentifyType find(String value){
+        return map.get(value);
+    }
+}

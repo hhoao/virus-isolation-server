@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.hhoa.vi.mgb.dao.OmsOrganizationDao">
+    <resultMap id="omsOrganization" type="org.hhoa.vi.mgb.model.generator.OmsOrganization">
+    </resultMap>
+    <resultMap id="organizationAccount" type="org.hhoa.vi.mgb.model.OrganizationAccount">
+        <result column="position_id" property="positionId"/>
+    </resultMap>
+    <select id="updateOrganizationAccountPosition">
+        UPDATE oms_account_organization_relation
+        SET position_id = #{positionId} WHERE organization_id = #{organizationId} AND account_id=#{accountId}
+    </select>
+    <delete id="deleteOrganizationAccountByAccountId">
+        DELETE FROM oms_account_organization_relation WHERE account_id=#{accountId} AND
+                                                            organization_id=#{organizationId};
+    </delete>
+
+    <select id="listOrganizationAccounts" resultMap="organizationAccount">
+        SELECT id, username, avatar, title, introduce, country, address, phone, email, signature, oaor.pi position_id
+        FROM ums_account ua,
+             (SELECT account_id ai, position_id pi
+              FROM oms_account_organization_relation
+              WHERE organization_id = #{organizationId}
+              ) oaor
+        WHERE oaor.ai = ua.id
+    </select>
+    <select id="deleteByAccountNameAndOrganizationId">
+        DELETE
+        FROM oms_organization
+        WHERE id =
+              (SELECT organization_id
+               FROM oms_account_organization_relation acor,
+                    (SELECT id aid FROM ums_account WHERE username = #{accountName}) ac
+               WHERE acor.account_id = ac.aid
+                 AND acor.organization_id = #{orgainzationId})
+    </select>
+    <insert id="insertByAccountNameAndOrganization">
+    </insert>
+</mapper>

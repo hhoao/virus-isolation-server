@@ -1,0 +1,13 @@
+use virus_isolation;
+
+db.health_clock.insertOne({
+    "name": "testDocument",
+    "accountName": "testAccount",
+    "createTime": Date.now().toLocaleString(),
+    "temperature": 37.1,
+    "healthCondition": true,
+    "address": "beijing",
+    "remark": "testRemark",
+})
+
+db.health_clock.find()

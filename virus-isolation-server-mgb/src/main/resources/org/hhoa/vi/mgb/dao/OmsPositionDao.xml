@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.hhoa.vi.mgb.dao.OmsPositionDao">
+    <select id="getPositionResources" resultType="org.hhoa.vi.mgb.model.generator.UmsResource">
+        SELECT id,
+               type,
+               create_time,
+               name,
+               method,
+               url,
+               description,
+               resource_id
+        FROM ums_resource ur,
+             (SELECT resource_id FROM ums_position_resource_relation WHERE position_id = #{positionId}) upr
+        WHERE upr.resource_id = ur.id;
+    </select>
+    <select id="listAllPositionResources" resultType="org.hhoa.vi.mgb.model.generator.UmsResource">
+        SELECT ur.id, ur.name, ur.type, ur.create_time, ur.description, ur.method, ur.url
+        FROM ums_resource ur,
+             (SELECT resource_id FROM ums_position_resource_relation) upr
+        WHERE ur.id = upr.resource_id;
+    </select>
+</mapper>

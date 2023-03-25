@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active: dev #默认开发环境
+  jackson:
+    default-property-inclusion: non_null

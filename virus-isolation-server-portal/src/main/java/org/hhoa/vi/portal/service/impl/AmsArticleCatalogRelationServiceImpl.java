@@ -1,0 +1,41 @@
+package org.hhoa.vi.portal.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.AllArgsConstructor;
+import org.hhoa.vi.mgb.model.AmsArticle;
+import org.hhoa.vi.mgb.model.AmsArticleCatalogRelation;
+import org.hhoa.vi.portal.dao.AmsArticleCatalogRelationDao;
+import org.hhoa.vi.portal.service.AmsArticleCatalogRelationService;
+import org.hhoa.vi.portal.service.AmsArticleService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Stream;
+
+/**
+ * The type Ams article catalog relation service.
+ *
+ * @author hhoa
+ * @since 2022 /9/4
+ */
+@AllArgsConstructor
+@Service
+public class AmsArticleCatalogRelationServiceImpl implements AmsArticleCatalogRelationService {
+    private AmsArticleCatalogRelationDao articleCatalogRelationDao;
+    private AmsArticleService articleService;
+
+
+    @Override
+    public List<AmsArticle> getCatalogArticles(Long catalogId) {
+        AmsArticleCatalogRelation articleCatalogRelation = new AmsArticleCatalogRelation();
+        articleCatalogRelation.setCatalogId(catalogId);
+        Stream<AmsArticle> amsArticleStream =
+                articleCatalogRelationDao.selectList(
+                                new QueryWrapper<>(articleCatalogRelation))
+                        .stream().map(relation -> {
+                            Long articleId = articleCatalogRelation.getArticleId();
+                            return articleService.selectById(articleId);
+                        });
+        return amsArticleStream.toList();
+    }
+}
